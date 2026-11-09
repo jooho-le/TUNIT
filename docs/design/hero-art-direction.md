@@ -6,7 +6,7 @@
 
 | 자산                                                                    | 역할                                          |
 | ----------------------------------------------------------------------- | --------------------------------------------- |
-| [노란 헤드셋](../../frontend/public/assets/listening-object-yellow.png) | 현재 Hero의 투명 배경 이미지                  |
+| [노란 헤드셋](../../frontend/public/assets/listening-object-yellow.png) | 현재 랜딩의 작은 헤드셋 썸네일                |
 | [원본 헤드셋](../../frontend/public/assets/listening-object.png)        | 초기 시안 보존, 현재 Hero에는 사용하지 않음   |
 | [PaintSplash.tsx](../../frontend/src/components/PaintSplash.tsx)        | 이미지 뒤에서 별도로 움직이는 보라색 SVG 물감 |
 

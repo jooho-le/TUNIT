@@ -147,6 +147,7 @@ function StorySection({ story }: { story: Story }) {
       className={`landing-story landing-story-${story.id}`}
       id={`landing-${story.id}`}
       data-screen="S01-C"
+      data-landing-chapter={story.number}
       data-scroll-scene
       data-loop-scene
       aria-labelledby={`landing-${story.id}-title`}

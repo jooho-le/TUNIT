@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import { Icon } from "../../components/ui";
 import { INTRO_DURATION } from "./content";
 
@@ -7,9 +8,10 @@ export default function IntroSequence({
 }: {
   onComplete: (restoreFocus?: boolean) => void;
 }) {
-  const skip = useRef<HTMLButtonElement>(null);
+  const controls = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const finish = () => onComplete(document.activeElement === skip.current);
+    const finish = () =>
+      onComplete(!!controls.current?.contains(document.activeElement));
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reduce = () => {
       if (preference.matches) finish();
@@ -22,33 +24,37 @@ export default function IntroSequence({
     };
   }, [onComplete]);
   return (
-    <div
+    <section
       className="landing-intro"
       data-screen="S01-A"
       aria-label="TUNIT 브랜드 인트로"
+      style={{ "--intro-duration": `${INTRO_DURATION}ms` } as CSSProperties}
     >
-      <div className="landing-intro-orbits" aria-hidden="true">
-        <i />
-        <i />
-        <i />
+      <div className="landing-intro-top">
+        <span>[ A TUNIT ORIGINAL ]</span>
+        <span>2026 / VOL. 01</span>
       </div>
-      <div className="landing-intro-word" aria-hidden="true">
-        {"TUNIT.".split("").map((letter, i) => (
-          <span key={i} style={{ animationDelay: `${i * 80}ms` }}>
-            {letter}
-          </span>
-        ))}
+      <div className="landing-intro-center">
+        <p>EVERY CONNECTION STARTS WITH A SOUND.</p>
+        <h1 aria-label="TUNIT 브랜드 인트로">
+          {"Tunit.".split("").map((letter, i) => (
+            <span key={i} style={{ animationDelay: `${i * 65}ms` }}>
+              {letter}
+            </span>
+          ))}
+        </h1>
+        <span className="editorial-handwriting">
+          [ 우리를 이어주는, 아주 작은 취향 ]
+        </span>
       </div>
-      <span className="landing-intro-caption">
-        EVERY CONNECTION STARTS WITH A SOUND.
-      </span>
-      <button
-        ref={skip}
-        className="landing-skip"
-        onClick={() => onComplete(true)}
-      >
-        인트로 건너뛰기 <Icon name="arrow" size={16} />
-      </button>
-    </div>
+      <div ref={controls} className="landing-intro-controls">
+        <Link className="landing-action" to="/start">
+          내 취향 찾기 <Icon name="arrow" size={20} />
+        </Link>
+        <button className="landing-skip" onClick={() => onComplete(true)}>
+          인트로 건너뛰기 <Icon name="arrow" size={16} />
+        </button>
+      </div>
+    </section>
   );
 }

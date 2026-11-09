@@ -39,9 +39,10 @@ afterEach(() => {
 describe("S01 independent animated landing", () => {
   it("shows all four stories and the start CTA with reduced motion, without an intro wait", () => {
     page();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "취향이 맞는사람을 발견하다.",
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName(
+      "TUNIT — 취향이 맞는 사람을 발견하다",
     );
+    expect(screen.getByText("취향이 맞는 사람을 발견하다.")).toBeVisible();
     for (const title of [
       /좋아하는 음악이/,
       /나와 닮은 플레이리스트/,
@@ -105,9 +106,9 @@ describe("S01 independent animated landing", () => {
     vi.spyOn(api, "me").mockReturnValue(new Promise(() => {}));
     window.history.replaceState(null, "", "/#/");
     render(<App />);
-    expect(await screen.findByRole("heading", { level: 1 })).toHaveTextContent(
-      "취향이 맞는",
-    );
+    expect(
+      await screen.findByRole("heading", { level: 1 }),
+    ).toHaveAccessibleName("TUNIT — 취향이 맞는 사람을 발견하다");
     expect(screen.getByRole("link", { name: "시작하기" })).toHaveAttribute(
       "href",
       "#/start",
@@ -173,5 +174,60 @@ describe("S01 independent animated landing", () => {
       block: "start",
     });
     expect(window.location.hash).toBe("#/landing");
+  });
+
+  it("shows the title sequence as the accessible foreground with an immediately usable CTA", () => {
+    motionEnabled();
+    page();
+    expect(
+      screen.getByRole("region", { name: "TUNIT 브랜드 인트로" }),
+    ).toBeVisible();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName(
+      "TUNIT 브랜드 인트로",
+    );
+    expect(screen.getAllByRole("link", { name: /내 취향 찾기/ })).toHaveLength(
+      1,
+    );
+    expect(screen.getByRole("link", { name: /내 취향 찾기/ })).toHaveAttribute(
+      "href",
+      "/start",
+    );
+    expect(
+      screen.queryByRole("heading", { name: /좋아하는 음악이/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("plays the new sequence once without deleting the previous intro preference", () => {
+    motionEnabled();
+    sessionStorage.setItem("tunit-brand-intro-v1", "seen");
+    page();
+    fireEvent.click(screen.getByRole("button", { name: /인트로 건너뛰기/ }));
+    expect(sessionStorage.getItem(INTRO_SEEN_KEY)).toBe("seen");
+    expect(sessionStorage.getItem("tunit-brand-intro-v1")).toBe("seen");
+    expect(localStorage.length).toBe(0);
+  });
+
+  it("ends the sequence when reduced motion becomes enabled", () => {
+    const preference = Object.assign(new EventTarget(), {
+      matches: false,
+      media: "(prefers-reduced-motion: reduce)",
+    });
+    vi.spyOn(window, "matchMedia").mockReturnValue(
+      preference as MediaQueryList,
+    );
+    page();
+    expect(
+      screen.getByRole("button", { name: /인트로 건너뛰기/ }),
+    ).toBeVisible();
+    act(() => {
+      preference.matches = true;
+      preference.dispatchEvent(new Event("change"));
+    });
+    expect(
+      screen.queryByRole("button", { name: /인트로 건너뛰기/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAccessibleName(
+      "TUNIT — 취향이 맞는 사람을 발견하다",
+    );
   });
 });

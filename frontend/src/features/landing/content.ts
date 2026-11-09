@@ -1,5 +1,5 @@
 export const INTRO_DURATION = 1800;
-export const INTRO_SEEN_KEY = "tunit-brand-intro-v1";
+export const INTRO_SEEN_KEY = "tunit-brand-intro-v2";
 
 export const stories = [
   {
@@ -42,6 +42,7 @@ export const stories = [
 export type Story = (typeof stories)[number];
 
 export function scrollToLandingSection(id: string) {
+  window.dispatchEvent(new Event("tunit:explore-landing"));
   document.getElementById(id)?.scrollIntoView({
     behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ? "instant"

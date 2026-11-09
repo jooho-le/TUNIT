@@ -4,25 +4,26 @@
 
 ## 마지막 앱 검증
 
-검증일은 2026-11-10(KST), 기준 커밋은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)이다. Node 20.19.5·React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom 환경에서 실행했다.
+검증일은 2026-11-10(KST), 기준은 DESIGN3 디자인 개편 작업의 `frontend` 파일이다. 이전 초기 검증은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)에 있으며 이번 작업에서는 테스트·빌드를 다시 실행했다. Node 20.19.5·React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom 환경을 사용했다.
 
 | 검사                       | 기록된 결과              | 범위                                                          |
 | -------------------------- | ------------------------ | ------------------------------------------------------------- |
-| `npm test`                 | **44/44 통과**, 5개 파일 | 로컬 데이터·HTTP 계약·DOM 흐름·랜딩·모션 수명주기             |
+| `npm test`                 | **51/51 통과**, 6개 파일 | 로컬 데이터·HTTP 계약·DOM 흐름·랜딩·모션 수명주기             |
 | `npm run build`            | **통과**                 | TypeScript strict·Vite production build                       |
 | 의존성 설치 당시 npm audit | **발견 0건**             | Vitest 4.1.12로 조정한 당시 lockfile 검사; 실시간 재검사 아님 |
 
-이번 문서 정리는 앱 코드를 변경하지 않아 앱 검사를 재실행하지 않았다. 문서 링크·형식·원본 보존 검증은 [문서 정리 작업 기록](work-log/2026-11-10-documentation-cleanup.md)에 별도로 기록한다.
+변경 내용과 실행 범위는 [DESIGN3 개편 작업 기록](work-log/2026-11-10-freshman-redesign.md)에 있다. 기존 문서 정리의 링크·형식 검증 이력은 [문서 정리 기록](work-log/2026-11-10-documentation-cleanup.md)에 별도로 보존한다.
 
 ## 자동화 테스트 위치
 
-| 파일                                                                          | 개수 | 확인한 것                                                          |
-| ----------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------ |
-| [mock.test.ts](../frontend/src/api/mock.test.ts)                              | 16   | 계정·취향·후보·초대·관심 상태·로컬 저장 실패                       |
-| [client.test.ts](../frontend/src/api/client.test.ts)                          | 6    | 쿠키·CSRF 헤더·오류·자동 재시도 차단                               |
-| [App.test.tsx](../frontend/src/app/App.test.tsx)                              | 12   | 가입·온보딩·후보 0명·취향 변경/삭제·요청·비공개·로그아웃·외부 링크 |
-| [LandingPage.test.tsx](../frontend/src/features/landing/LandingPage.test.tsx) | 8    | 인트로 완료/건너뛰기·초점·동작 줄이기·CTA·상태별 이동·hash 유지    |
-| [scrollMotion.test.ts](../frontend/src/hooks/scrollMotion.test.ts)            | 2    | 늦게 마운트된 장면·등장·화면 밖 일시 정지·observer/프레임 정리     |
+| 파일                                                                                | 개수 | 확인한 것                                                                          |
+| ----------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------------------------------- |
+| [mock.test.ts](../frontend/src/api/mock.test.ts)                                    | 16   | 계정·취향·후보·초대·관심 상태·로컬 저장 실패                                       |
+| [client.test.ts](../frontend/src/api/client.test.ts)                                | 6    | 쿠키·CSRF 헤더·오류·자동 재시도 차단                                               |
+| [App.test.tsx](../frontend/src/app/App.test.tsx)                                    | 12   | 가입·온보딩·후보 0명·취향 변경/삭제·요청·비공개·로그아웃·외부 링크                 |
+| [LandingPage.test.tsx](../frontend/src/features/landing/LandingPage.test.tsx)       | 11   | 인트로 완료/건너뛰기·전체 타이틀·즉시 CTA·초점·저장값 보존·동작 줄이기·상태별 이동 |
+| [scrollMotion.test.ts](../frontend/src/hooks/scrollMotion.test.ts)                  | 2    | 늦게 마운트된 장면·등장·화면 밖 일시 정지·observer/프레임 정리                     |
+| [EditorialShell.test.tsx](../frontend/src/components/shell/EditorialShell.test.tsx) | 4    | 메뉴 초점·Escape·경로 보호·스크롤 복구·릴 경로/활성 표시·챕터 이동                 |
 
 테스트는 격리된 jsdom/메모리 저장소와 mock fetch를 쓴다. 사용자의 실제 브라우저 데이터를 읽거나 지우지 않으며 실제 서버 인증·DB 결과의 증거는 아니다.
 
@@ -57,7 +58,7 @@
 
 ## 검증 한계와 다음 단계
 
-- 실제 브라우저 스크린샷·터치·모바일 viewport·모션 프레임은 미검증이다. 기존 Chrome 탭 접근이 시간 초과되어 시각 확인을 완료하지 못했다.
+- 실제 브라우저 스크린샷·터치·모바일 viewport·모션 프레임·외부 글꼴 다운로드는 미검증이다. 실행 중인 5173 포트가 다른 프로젝트의 서버임을 확인해 이 프로젝트의 화면 검사에 사용하지 않았다.
 - Spring의 BCrypt·세션·CSRF·소유권 강제, PostgreSQL 제약·롤백·동시 트랜잭션은 미구현/미검증이다.
 - JCloud에서 다른 컴퓨터로 수행하는 가입→취향 저장→초대→관심 수락은 미검증이다.
 - 개발·프리뷰·백엔드 서버를 새로 실행하거나 브라우저 설정을 바꾸지 않았다.

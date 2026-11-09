@@ -7,3 +7,5 @@
 | 2026-11-10 | Notion 기반 프론트·애니메이션 랜딩 초기 구성 및 Git 정리 | [초기 작업 정리](2026-11-10-initial-frontend.md) |
 | 2026-11-10 | 기존 Markdown 문서·디자인 참고 자료 정리                 | [문서 정리](2026-11-10-documentation-cleanup.md) |
 | 2026-11-10 | dev 통합·빈 main 기준선·브랜치 운영 정리                 | [브랜치 전환](2026-11-10-dev-main-workflow.md)   |
+| 2026-11-10 | DESIGN3 기반 랜딩·프론트 편집 디자인 개편                | [디자인 개편](2026-11-10-freshman-redesign.md)   |
+| 2026-11-10 | 로컬 실행·로그인 방법 안내                               | [실행 안내](2026-11-10-local-run-guide.md)       |
