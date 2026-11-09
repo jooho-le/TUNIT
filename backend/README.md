@@ -1,11 +1,21 @@
-# Backend scaffold
+# 백엔드 준비 범위
 
-이 디렉터리는 Notion 명세에 따른 Spring Boot 프로젝트의 폴더·설정 뼈대입니다. Controller, Service, Entity, Repository, 인증, API, DB 스키마·마이그레이션을 구현하지 않았습니다. `TunitApplication.java`, Spring 의존성, Gradle wrapper도 아직 없습니다.
+[문서 안내](../docs/README.md) · [API 계약](../docs/api-spec.md) · [DB 초안](../docs/erd.md)
 
-Java 21을 시작 기준으로 선언했으며 Spring Boot 버전과 JDK 호환성은 실제 백엔드 착수 시 확정합니다. `build.gradle`은 Java 프로젝트 틀만 제공합니다. 현재 실행 가능한 Spring 서버가 아닙니다.
+Notion 설계의 Java Spring Boot 백엔드를 위한 **폴더·설정 초안**이다. 현재 실행 가능한 Spring 앱은 아니다.
 
-`application*.yml`은 설정 예시이며, `.env.example`은 변수 목록입니다. Spring은 `.env` 파일을 자동으로 읽지 않으므로 실제 실행 단계에서 운영체제 환경 또는 별도 비밀 설정 주입 방식을 선택해야 합니다. `app.*` 설정의 Java 바인딩도 미구현입니다.
+## 준비한 것
 
-운영 쿠키는 HttpOnly·Secure·SameSite=Lax를 기본으로 지정했습니다. 로컬 HTTP 예외는 `local` 프로필에만 둡니다. Spring Security의 CSRF를 끄는 설정은 없습니다. 실제 Spring Security, BCrypt, CSRF 엔드포인트 및 권한 검사는 추후 구현하고 검증해야 합니다.
+- `config`, `common`, `auth`, `user`, `music`, `taste`, `match`, `invitation`, `interest`, `connection`, `discovery` 패키지 위치.
+- 테스트와 `db/migration` 위치.
+- Java 21 시작 기준의 Gradle Java 설정. Spring/JDK 최종 호환 버전은 미확정.
+- PostgreSQL 환경변수·JPA validate·Flyway·세션 쿠키·local/prod 설정 예시.
+- [.env.example](.env.example)의 변수 이름. 실제 비밀값은 없음.
 
-기능 경로: `config`, `common`, `auth`, `user`, `music`, `taste`, `match`, `invitation`, `interest`, `connection`, `discovery`. `db/migration`과 테스트 폴더는 위치만 예약했습니다.
+## 아직 없는 것
+
+Spring 플러그인·의존성, `TunitApplication.java`, Gradle wrapper, Controller·Service·DTO·Entity·Repository, SQL·마이그레이션, 실제 인증·인가·CSRF·트랜잭션.
+
+Spring은 `.env`를 자동으로 읽지 않는다. 실제 착수 시 환경 주입 방식과 `app.*` Java 바인딩을 구현해야 한다. 쿠키 설정 예시는 운영 HttpOnly·Secure·SameSite=Lax와 로컬 HTTP 예외를 구분하지만, 설정 파일만으로 인증이 구현되는 것은 아니다.
+
+전체 연동 경계와 이후 검증은 [아키텍처](../docs/architecture.md)·[검증 기록](../docs/test-results.md)을 따른다.
