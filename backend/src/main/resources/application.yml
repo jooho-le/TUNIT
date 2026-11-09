@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: tunit
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+server:
+  port: ${SERVER_PORT:8080}
+  address: 127.0.0.1
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        same-site: lax
+        secure: ${SESSION_COOKIE_SECURE:true}
+app:
+  public-url: ${APP_PUBLIC_URL}
+  ai:
+    embedding-enabled: ${AI_EMBEDDING_ENABLED:false}
+# app.* are configuration declarations only; no Java binding/service exists yet.
+# CSRF remains enabled by Spring Security defaults when that dependency is added.

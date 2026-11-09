@@ -1,0 +1,6 @@
+# For local development only. Do not use this profile for public deployment.
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false

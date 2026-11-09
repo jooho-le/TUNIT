@@ -1,0 +1,19 @@
+# Review-only reverse-proxy template. Not installed or activated.
+# This listener is loopback-only. Configure JCloud HTTPS termination before publishing.
+server {
+    listen 127.0.0.1:8081;
+    server_name localhost;
+    root /srv/tunit/frontend/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

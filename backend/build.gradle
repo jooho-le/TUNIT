@@ -1,0 +1,15 @@
+// Directory/configuration scaffold only. No Spring application or API is implemented.
+// Add and pin the Spring Boot plugin/dependencies when backend implementation begins.
+plugins {
+    id 'java'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
