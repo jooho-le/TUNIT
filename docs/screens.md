@@ -1,4 +1,6 @@
-# Notion 화면 대응
+# 화면 지도
+
+[문서 안내](README.md) · [현재 디자인 기준](../DESIGN.md) · [요구사항 원문](requirements.md)
 
 HashRouter를 사용해 `/#/home`처럼 이동하며, 화면 ID는 문서와 `data-screen` 속성으로 추적합니다. 로그인하지 않은 보호 경로는 로그인으로, 취향이 미완료인 핵심 경로는 온보딩으로 안내합니다. My Taste는 미완료 상태에서도 열립니다.
 
@@ -34,7 +36,7 @@ HashRouter를 사용해 `/#/home`처럼 이동하며, 화면 ID는 문서와 `da
 
 대화·공동 목록·피드는 Notion에서 과제 이후 P2로 명시한 범위이므로 준비 화면만 있습니다. 실제 채팅이나 피드가 동작하는 것으로 표시하지 않습니다.
 
-## S01 랜딩 — 2026-11-10 Notion 추가 요구사항 반영
+## S01 랜딩
 
 `/landing`은 서비스 소개용 독립 랜딩이고, `/home`은 로그인·취향 입력 후 사용하는 개인 화면입니다. 루트 진입은 랜딩을 엽니다. 랜딩에서는 앱의 Home/Discover 메뉴 대신 섹션 이동과 로그인·시작하기를 제공합니다.
 
@@ -45,22 +47,14 @@ HashRouter를 사용해 `/#/home`처럼 이동하며, 화면 ID는 문서와 `da
 | S01-C | 취향 분석 → Music Twin → 음악 발견 → 친구 1:1 비교; 목업·스크롤 등장·절제된 패럴랙스     | `features/landing/FeatureStory.tsx`  |
 | S01-D | 취향·음악 노드 연결 모션, 지금 시작하기                                                  | `features/landing/FinalCTA.tsx`      |
 
-모든 시작 CTA는 프론트 `/start`에서 상태를 확인해 미로그인→`/login`, 취향 미완료→`/onboarding/intro`, 완료→`/home`으로 이동합니다. 인트로 자동 완료는 라우팅을 강제하지 않습니다. 로그인한 사용자도 랜딩을 둘러볼 수 있습니다.
+모든 시작 CTA는 프론트 `/start`에서 상태를 확인해 미로그인→`/login`, 취향 미완료→`/onboarding/intro`, 완료→`/home`으로 이동합니다. 전체 화면을 전환하는 인트로는 미구현입니다. 인트로 자동 완료는 라우팅을 강제하지 않습니다. 로그인한 사용자도 랜딩을 둘러볼 수 있습니다.
 
-인트로는 Hero의 시각 영역에서 재생하며 헤더·Hero·마지막 CTA는 계속 조작할 수 있습니다. 건너뛰기 버튼을 키보드로 누르면 Hero CTA로 초점을 옮깁니다. OS 동작 줄이기를 켜면 인트로를 기다리지 않고 바로 콘텐츠를 보여줍니다. 스크롤은 기본 브라우저 동작을 사용하며 섹션 이동이 Router hash를 덮어쓰지 않습니다.
+인트로는 **Hero 오른쪽 시각 영역**에서 재생하며 헤더·Hero·마지막 CTA는 계속 조작할 수 있습니다. 건너뛰기 버튼을 키보드로 누르면 Hero CTA로 초점을 옮깁니다. OS 동작 줄이기를 켜면 인트로를 기다리지 않고 바로 콘텐츠를 보여줍니다. 스크롤은 기본 브라우저 동작을 사용하며 섹션 이동이 Router hash를 덮어쓰지 않습니다.
 
 반복 모션은 IntersectionObserver로 화면 밖에서 멈추고, 백그라운드 탭에서도 멈춥니다. 모바일에서는 떠다니기·회전·패럴랙스와 음파 수를 줄이고, 저속 화면 갱신·동작 줄이기에서는 정적으로 표시합니다. 목업은 “화면 미리보기”로 구분하고 실제 추천 수·사용자·매칭 점수를 만들어내지 않습니다.
 
 콘텐츠와 장면 순서는 `features/landing/content.ts`, 스타일은 `styles/landing.css`에 모았습니다. 이전 랜딩 소스는 `.preview/Landing.before-animated-landing.tsx`에 보존했습니다.
 
-## 참고 문서
+## 명세 원문
 
-다음 일곱 문서를 모두 읽고 반영했습니다. Notion 원문은 변경하지 않았습니다.
-
-- [ui 플로우 차트](https://www.notion.so/bb2d062130a9825b96dd8146e5be5194)
-- [logic 플로우 차트](https://www.notion.so/bf2d062130a9827fa1b4810bb2064ecb)
-- [핵심 기능 MVP 설정](https://www.notion.so/cd9d062130a982ce8ff081028f1a0f24)
-- [프론트/백엔드/DB/배포 구조 결정](https://www.notion.so/facd062130a982a9976c0106e84da547)
-- [폴더 구조 잡기](https://www.notion.so/40bd062130a983068865015edc17e6de)
-- [환경변수 세팅](https://www.notion.so/83ad062130a982469a0b817a26000d4a)
-- [중요 기능 테스트 시나리오 작성](https://www.notion.so/22ed062130a98319b1d30169bb47cbf7)
+Notion 문서 링크와 P0~P2 범위는 [요구사항](requirements.md)에 모았습니다. 현재 구현 상태는 [문서 안내](README.md), 실제 검증 결과는 [검증 기록](test-results.md)을 확인하세요.

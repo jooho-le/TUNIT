@@ -1,20 +1,32 @@
-# 프론트 검증 기록
+# 검증 기록
 
-검증일: 2026-11-10 (KST). Node 20.19.5. React 19 / TypeScript / Vite 6.4.5 / Vitest 4.1.12 / React Testing Library / jsdom.
+[문서 안내](README.md) · [화면 지도](screens.md) · [작업 기록](work-log/README.md)
 
-## 실제 실행 결과
+## 마지막 앱 검증
 
-| 명령                     | 결과                     | 검증 범위                                                          |
-| ------------------------ | ------------------------ | ------------------------------------------------------------------ |
-| `npm test`               | **44/44 통과**, 5개 파일 | 로컬 어댑터 16, HTTP 계약 6, 화면 흐름 12, 랜딩 8, 모션 수명주기 2 |
-| `npm run build`          | **통과**                 | TypeScript strict 검사 + 프론트 production bundle                  |
-| 패키지 설치 시 npm audit | **취약점 0건**           | 이번 테스트 도구를 Vitest 4.1.12로 수정한 lockfile 기준            |
+검증일은 2026-11-10(KST), 기준 커밋은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)이다. Node 20.19.5·React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom 환경에서 실행했다.
 
-증거 코드는 [mock.test.ts](../frontend/src/api/mock.test.ts), [client.test.ts](../frontend/src/api/client.test.ts), [App.test.tsx](../frontend/src/app/App.test.tsx)입니다. 테스트는 격리된 jsdom 저장소/메모리 저장소를 사용하며 사용자의 실제 브라우저 데이터를 읽거나 삭제하지 않습니다.
+| 검사                       | 기록된 결과              | 범위                                                          |
+| -------------------------- | ------------------------ | ------------------------------------------------------------- |
+| `npm test`                 | **44/44 통과**, 5개 파일 | 로컬 데이터·HTTP 계약·DOM 흐름·랜딩·모션 수명주기             |
+| `npm run build`            | **통과**                 | TypeScript strict·Vite production build                       |
+| 의존성 설치 당시 npm audit | **발견 0건**             | Vitest 4.1.12로 조정한 당시 lockfile 검사; 실시간 재검사 아님 |
 
-이 결과는 **브라우저 로컬 프론트·요청 어댑터 검증**입니다. 실제 브라우저 스크린샷·터치/뷰포트 실측, 실제 Spring 응답, BCrypt·세션 쿠키, PostgreSQL 제약·트랜잭션, JCloud 외부 접속은 실행하지 않았습니다. 개발/프리뷰/백엔드 서버도 시작하지 않았습니다.
+이번 문서 정리는 앱 코드를 변경하지 않아 앱 검사를 재실행하지 않았다. 문서 링크·형식·원본 보존 검증은 [문서 정리 작업 기록](work-log/2026-11-10-documentation-cleanup.md)에 별도로 기록한다.
 
-## Notion T01~T24 적용 상태
+## 자동화 테스트 위치
+
+| 파일                                                                          | 개수 | 확인한 것                                                          |
+| ----------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------ |
+| [mock.test.ts](../frontend/src/api/mock.test.ts)                              | 16   | 계정·취향·후보·초대·관심 상태·로컬 저장 실패                       |
+| [client.test.ts](../frontend/src/api/client.test.ts)                          | 6    | 쿠키·CSRF 헤더·오류·자동 재시도 차단                               |
+| [App.test.tsx](../frontend/src/app/App.test.tsx)                              | 12   | 가입·온보딩·후보 0명·취향 변경/삭제·요청·비공개·로그아웃·외부 링크 |
+| [LandingPage.test.tsx](../frontend/src/features/landing/LandingPage.test.tsx) | 8    | 인트로 완료/건너뛰기·초점·동작 줄이기·CTA·상태별 이동·hash 유지    |
+| [scrollMotion.test.ts](../frontend/src/hooks/scrollMotion.test.ts)            | 2    | 늦게 마운트된 장면·등장·화면 밖 일시 정지·observer/프레임 정리     |
+
+테스트는 격리된 jsdom/메모리 저장소와 mock fetch를 쓴다. 사용자의 실제 브라우저 데이터를 읽거나 지우지 않으며 실제 서버 인증·DB 결과의 증거는 아니다.
+
+## Notion T01~T24 대응
 
 | 시나리오                | 이번에 확인한 것                                                        | 실제 서버/DB 기준                            |
 | ----------------------- | ----------------------------------------------------------------------- | -------------------------------------------- |
@@ -43,29 +55,13 @@
 | T23 로그아웃            | 로컬 세션 무효·데이터 유지·로그인 복귀, 보호 요청 401 처리              | 실제 서버 세션 무효화 미검증                 |
 | T24 CSRF                | mock fetch로 토큰 선발급·헤더·없으면 미전송·403 재발급·자동 재시도 없음 | **서버 CSRF 403·DB 불변 미검증**             |
 
-## 확인하고 고친 문제
+## 검증 한계와 다음 단계
 
-- jsdom의 `matchMedia` mock이 테스트 자동 복원 때 초기화되는 문제를 수정했습니다.
-- 취향 삭제 뒤 온보딩을 열 때 기존 선택이 다시 보일 수 있어, 세션 프로필을 갱신한 다음 이동하도록 수정하고 빈 선택을 검증했습니다.
-- 로그아웃 뒤 보호 경로의 재인증 흐름을 일관되게 정리했습니다.
-- TypeScript의 API 래핑 타입 오류와 테스트용 Node 타입 누락을 수정했습니다.
-- npm 레지스트리 DNS 제한으로 타입 패키지 설치가 한 번 실패했으며 허용된 네트워크 실행으로 설치를 완료했습니다.
-- 이번에 추가한 Vitest 3 의존성의 보안 공지를 확인해 4.1.12로 교체했고, 기존 React·Vite 버전은 유지했습니다. [공식 보안 공지](https://github.com/vitest-dev/vitest/security/advisories/GHSA-qxg6-89mg-rqv8), [v4 호환 조건](https://v4.vitest.dev/guide/migration.html).
+- 실제 브라우저 스크린샷·터치·모바일 viewport·모션 프레임은 미검증이다. 기존 Chrome 탭 접근이 시간 초과되어 시각 확인을 완료하지 못했다.
+- Spring의 BCrypt·세션·CSRF·소유권 강제, PostgreSQL 제약·롤백·동시 트랜잭션은 미구현/미검증이다.
+- JCloud에서 다른 컴퓨터로 수행하는 가입→취향 저장→초대→관심 수락은 미검증이다.
+- 개발·프리뷰·백엔드 서버를 새로 실행하거나 브라우저 설정을 바꾸지 않았다.
 
-## 이후 실제 연동 검증
+서버·DB 착수 후 T01~T24를 실제 HTTP·PostgreSQL로 다시 수행하고 화면/API/DB 결과를 함께 기록한다. 로컬 Promise 경합·JSON 저장 실패·mock CSRF 확인을 실제 동시 트랜잭션·롤백·서버 인가 테스트로 대체하지 않는다.
 
-Spring/DB를 구현한 뒤 T01~T24를 실제 HTTP·PostgreSQL 테스트로 수행하고, 특히 소유권 변조·PENDING 쌍 중복·원자적 수락/롤백·동시 수락/취소·CSRF를 검증해야 합니다. JCloud에서는 다른 컴퓨터로 가입→취향 저장→초대→관심→수락을 실행하고 화면/API/DB 결과를 함께 기록해야 합니다. 지금의 테스트 통과를 이 검증의 대체 증거로 사용하지 않습니다.
-
-## S01 추가 검증
-
-Notion UI 플로우차트의 S01-A~D 추가 요구사항을 반영한 뒤 전체 44개 테스트와 TypeScript·production build가 통과했습니다. 별도 랜딩 테스트는 [LandingPage.test.tsx](../frontend/src/features/landing/LandingPage.test.tsx), 모션 수명주기는 [scrollMotion.test.ts](../frontend/src/hooks/scrollMotion.test.ts)에 있습니다.
-
-- 브랜드 인트로 자동 종료·즉시 건너뛰기·CTA 초점 복귀·탭 내 재진입·타이머 해제 확인.
-- 동작 줄이기에서 인트로 없이 네 가지 소개와 CTA에 접근하는지 확인.
-- 세션 로딩 중에도 랜딩·CTA가 표시되고, 인트로 종료 전에도 로그인으로 이동하는지 확인.
-- 로그인 여부·취향 완료 여부에 따른 로그인/온보딩/Home 이동과 로그인 후 랜딩 유지 확인.
-- 섹션 이동이 Router hash를 바꾸지 않는지 확인.
-- 비동기 로딩 뒤 추가된 장면의 스크롤 값 갱신, 등장 처리, 정리 확인.
-- 뷰포트 진입/이탈 시 반복 모션 상태 전환과 observer 해제 확인.
-
-기존 Chrome 미리보기 탭에서 시각 확인을 시도했지만 UI 접근이 시간 초과되어 실제 화면·모바일 뷰포트·모션 프레임은 확인하지 못했습니다. 이 제한을 해소하려고 개발 서버를 새로 시작하거나 브라우저 설정을 바꾸지 않았습니다. DOM 테스트를 실제 브라우저 시각 검증으로 표시하지 않습니다.
+초기 구현 중 해결한 문제와 도구 변경의 이력은 [문서 정리 기록의 이관 메모](work-log/2026-11-10-documentation-cleanup.md#초기-구현-메모-이관)에 보존했다.
