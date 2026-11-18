@@ -76,7 +76,7 @@ type View = {
 };
 
 const landing = (key: string, title: string, focus: string): View => ({
-  key, screen: "S01", title, focus, route: "/landing", group: 0, height: 1100, user: null,
+  key, screen: "S01", title, focus, route: "/landing", group: 0, height: focus === "#landing-taste" ? 1400 : 1100, user: null,
 });
 const views: View[] = [
   { ...landing("S01-A", "브랜드 인트로", ".landing-intro"), motion: true, height: 1000 },
@@ -173,7 +173,7 @@ function splitSelectors(selector: string) {
 }
 
 function exportCss() {
-  const css = ["global", "flows", "editorial", "landing"].map((name) =>
+  const css = ["global", "flows", "editorial", "landing", "readability"].map((name) =>
     readFileSync(`${dir}../src/styles/${name}.css`, "utf8")).join("\n");
   const tree = postcss.parse(css);
   tree.walkAtRules("import", (rule) => { rule.remove(); });

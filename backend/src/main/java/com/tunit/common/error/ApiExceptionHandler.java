@@ -44,7 +44,7 @@ public class ApiExceptionHandler {
     ResponseEntity<ApiErrorResponse> mismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
         return reply(exception.getRequiredType() == UUID.class ? ErrorCode.INVALID_UUID : ErrorCode.INVALID_INPUT, request);
     }
-    @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class})
+    @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class, org.springframework.web.bind.MissingServletRequestParameterException.class})
     ResponseEntity<ApiErrorResponse> malformed(Exception exception, HttpServletRequest request) { return reply(ErrorCode.INVALID_INPUT, request); }
     @ExceptionHandler(AuthenticationException.class)
     ResponseEntity<ApiErrorResponse> authentication(AuthenticationException exception, HttpServletRequest request) { return reply(ErrorCode.INVALID_CREDENTIALS, request); }

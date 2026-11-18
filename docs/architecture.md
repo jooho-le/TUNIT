@@ -48,6 +48,6 @@ React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·P
 
 ## 백엔드와 배포 경계
 
-백엔드는 Java 21·Spring Boot 4.1.2·Gradle Wrapper 9.5.1이다. 14개 Entity/Repository와 V1, 공통 페이지·오류 DTO, Security JSON 오류, 로그인·세션 조회·로그아웃·CSRF를 제공한다. Hibernate는 validate, DDL은 Flyway가 담당한다. 통합 검사는 실제 PostgreSQL 16에서 실행했다.
+백엔드는 Java 21·Spring Boot 4.1.2·Gradle Wrapper 9.5.1이다. 14개 Entity/Repository와 V1, 공통 페이지·오류 DTO, 세션/CSRF·회원가입·본인 취향 CRUD·공개/비교 동의 설정·활성 태그를 제공한다. Controller/Service/Repository를 분리하고 본인 취향 쓰기는 사용자 행 잠금과 단일 트랜잭션을 사용한다. Hibernate는 validate, DDL은 Flyway가 담당한다. 통합 검사는 실제 PostgreSQL 16에서 실행했다.
 
-기존 프론트의 ID·목록·취향 저장·초대 상태는 최신 Notion과 달라 자동 호환되지 않는다. [설계 비교](backend-design-review.md)에 차이와 보류 정책을 기록했다. 프론트의 5명·10곡 완료 조건과 로컬 기한·가중치를 서버 정책으로 확정하지 않는다. [백엔드 안내](../backend/README.md)·[배포 안내](../deploy/README.md)를 참고한다. 임시 DB는 종료·삭제했으며 운영 DB·JCloud 연동은 미검증이다.
+기존 프론트의 ID·목록·취향 저장·초대 상태는 최신 Notion과 달라 자동 호환되지 않는다. [추가 API 검토](backend-api-gap-review.md)에 사용자가 확정한 가입/취향 완료 기준과 남은 차이를 기록했다. 초대 기한·추천 가중치는 미확정이다. [백엔드 안내](../backend/README.md)·[배포 안내](../deploy/README.md)를 참고한다. 임시 DB는 종료·삭제했으며 운영 DB·JCloud 연동은 미검증이다.

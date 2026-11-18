@@ -9,7 +9,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
-    include: ["design/export.test.tsx"],
+    include: ["design/export.test.tsx", "design/viewer.test.js"],
     fileParallelism: false,
     testTimeout: 60000,
     restoreMocks: true,

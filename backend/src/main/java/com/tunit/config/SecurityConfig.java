@@ -44,6 +44,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(config -> config
             .requestMatchers(HttpMethod.GET, "/api/v1/auth/csrf").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll()
             .anyRequest().authenticated());
         http.exceptionHandling(config -> config
             .authenticationEntryPoint((req, res, ex) -> errors.write(req, res, ErrorCode.UNAUTHORIZED))

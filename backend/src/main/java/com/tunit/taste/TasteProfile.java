@@ -34,4 +34,12 @@ public class TasteProfile {
     public boolean isPublic() { return isPublic; }
     public boolean isComparisonConsent() { return comparisonConsent; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public void updateSelections(TasteStatus status, Instant now) {
+        this.status = Objects.requireNonNull(status); this.summary = null; this.updatedAt = Objects.requireNonNull(now);
+    }
+    public void updateSettings(ProfileSettingsPatch patch, Instant now) {
+        if (patch.isPublic() != null) this.isPublic = patch.isPublic();
+        if (patch.comparisonConsent() != null) this.comparisonConsent = patch.comparisonConsent();
+        this.updatedAt = Objects.requireNonNull(now);
+    }
 }

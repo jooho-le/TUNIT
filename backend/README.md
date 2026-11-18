@@ -1,6 +1,6 @@
 # TUNIT 백엔드 기반
 
-[설계 비교](../docs/backend-design-review.md) · [검증 기록](../docs/test-results.md) · [실제 API 계약](../contracts/backend-foundation.openapi.json)
+[설계 비교](../docs/backend-design-review.md) · [추가 API 검토](../docs/backend-api-gap-review.md) · [검증 기록](../docs/test-results.md) · [실제 API 계약](../contracts/backend-foundation.openapi.json)
 
 Java 21·Spring Boot 4.1.2·Spring Security 세션·Spring Data JPA·Flyway·PostgreSQL 기반이다. Notion V1의 14개 테이블과 Entity/Repository를 구현했다. 프론트는 기존 mock을 유지하며 추천·초대·관심 업무 서비스는 구현하지 않았다.
 
@@ -14,16 +14,27 @@ Java 21·Spring Boot 4.1.2·Spring Security 세션·Spring Data JPA·Flyway·Pos
 | POST | /auth/login | JSON email/password·CSRF·DB BCrypt 검증, 세션 ID 변경·인증 저장·CSRF 교체 |
 | GET | /auth/me | 본인 {id,nickname,tasteStatus}, 프로필 없으면 INCOMPLETE |
 | POST | /auth/logout | 세션·현재 CSRF 필요, 세션 무효화, 204 빈 응답 |
+| POST | /auth/signup | 익명 CSRF·입력 검증·이메일 중복 409·BCrypt 저장·201; 가입 후 별도 로그인 |
+| GET | /catalog/tags?type=GENRE 또는 MOOD | 로그인한 활성 사용자, 활성 태그 배열 |
+| GET | /me/taste | 본인 선택 ID·상태·시각; 빈 조회는 DB에 저장하지 않음 |
+| PUT | /me/taste | 3배열 전체 교체·카탈로그 검증·COMPLETE 재계산·단일 트랜잭션 |
+| DELETE | /me/taste | 본인 선택·요약 초기화·INCOMPLETE, 공개/동의 설정 보존, 204 |
+| GET | /me/profile/settings | 본인 공개·비교 동의; 프로필 없으면 false/false |
+| PATCH | /me/profile/settings | 제공한 불리언만 변경; 빈 객체·null·다른 필드 거절 |
+
+구현 범위는 8개 경로의 11개 HTTP 작업이다. 회원가입은 비밀번호 Unicode 8자 이상·UTF-8 72바이트 이하, 닉네임 앞뒤 공백 제거 후 Unicode 1~50자다. 취향은 아티스트 최대 5명·곡 최대 10곡·GENRE/MOOD 각각 최대 3개이며, 아티스트 5명·곡 10곡·GENRE/MOOD 각각 1개 이상이면 COMPLETE다. 사용자가 이번 추가 작업에서 확정한 기준이며 Notion 원문은 수정하지 않았다.
+
+취향 변경은 사용자 행을 잠가 같은 사용자의 PUT/PATCH/DELETE를 직렬화한다. 남아 있는 항목의 가중치는 유지하고 새 항목은 V1 기본값 1을 사용한다. 선택 변경 시 오래된 요약을 제거한다. 공유 PK 프로필은 새 행을 명시적으로 persist한다. GET에는 저장 부작용이 없고 프로필 없는 취향 응답의 updatedAt은 사용자 updatedAt을 사용한다.
 
 공통 오류는 {code,message,fieldErrors,timestamp,path}다. 필터의 401/403도 JSON이며 리다이렉트하지 않는다. SQL·비밀번호·해시·쿼리·초대 토큰을 오류에 넣지 않는다. 로그인 의존 서비스 장애 503과 자격 증명 불일치 401을 구분한다. 로그인 응답에 필요한 DB 조회가 끝난 후 인증 세션을 저장한다. JSON 문자열 필드에 숫자·불리언을 보내면 자동 변환하지 않고 400 INVALID_INPUT으로 거절한다.
 
-쿠키는 HttpOnly·SameSite=Lax·기본 Secure=true·cookie-only다. 기존 local 프로필의 HTTP 전용 Secure=false와 prod의 Secure=true를 유지한다. 로그인 후 기존 CSRF는 무효이므로 다시 조회한다. CSRF 없는 변경 요청은 인증 검사보다 먼저 403이 될 수 있다. 가입·기본 계정 자동 생성은 구현하지 않았다. 카탈로그 등 미구현 경로를 공개하지 않으며, 이는 향후 공개 정책을 확정한 것이 아니다.
+쿠키는 HttpOnly·SameSite=Lax·기본 Secure=true·cookie-only다. 기존 local 프로필의 HTTP 전용 Secure=false와 prod의 Secure=true를 유지한다. 로그인 후 기존 CSRF는 무효이므로 다시 조회한다. CSRF 없는 변경 요청은 인증 검사보다 먼저 403이 될 수 있다. 기본 계정·음악·태그를 자동 생성하지 않는다. 태그 조회는 기존 인증 보호를 유지하며 카탈로그의 비로그인 공개 정책을 확정한 것이 아니다.
 
 ## DB 구현과 보류
 
 - V1은 [Notion 필드 정의](https://app.notion.com/p/bc6d062130a98224984081f41d45a5a4) 15절의 전체 SQL이다.
 - 테이블마다 Entity/Repository를 제공한다. 6개 조인은 @EmbeddedId/@MapsId, 프로필은 사용자 공유 PK, 관심 요청은 @Version이다.
-- UUID와 시각은 호출자가 제공한다. UUID 발급 버전·취향 완료·실제 선호도 입력 정책을 확정하지 않는다.
+- 엔티티의 UUID와 시각은 호출자가 제공한다. 회원가입 서비스는 UUID·현재 시각을 생성한다. 실제 선호도 점수 입력 API는 미구현이다.
 - TIMESTAMPTZ는 Instant로 매핑한다. Hibernate는 validate, Flyway는 clean-disabled=true다.
 - 역방향 PENDING 중복 인덱스, GENRE 복합 FK, 요청 ACCEPTED·연결 쌍 정합성은 보류했다. GENRE 조인 생성자는 MOOD를 거부하지만 DB 직접 쓰기까지 보장하지 않는다.
 - 연결 UUID 순서는 PostgreSQL과 동일한 unsigned 비교를 사용한다.
@@ -38,7 +49,7 @@ backend/scripts/test-postgres.sh
 
 이 명령은 SCRAM 비밀번호를 임의 생성해 임시 PostgreSQL 클러스터를 127.0.0.1 임의 포트에 만들고, Flyway·JPA·Security 검사와 bootJar를 실행한다. 기존 DB_URL·개발 DB·5432 서비스를 사용하지 않는다. 성공·실패 후 자신이 만든 DB를 종료·삭제하며 비밀값은 출력하지 않는다. Homebrew JDK 21 선택은 해당 실행에만 적용한다. 도구 경로는 TUNIT_JAVA_HOME/TUNIT_PG_BIN으로 지정할 수 있다.
 
-- **27개 PASS / 실패 0 / 생략 0**: 공통 계약 4, DB 기반 9, 보안·오류 14. 같은 임시 DB에서 전체 검사를 두 번 실행해 모두 통과했다.
+- **43개 PASS / 실패 0 / 생략 0**: 공통 계약 4, DB 기반 9, 보안·오류 14, 신규 API 15, 실제 경로/OpenAPI 대조 1.
 - V1 성공 기록 1건, 업무 테이블 14개, 전체 Repository 왕복과 재적용 no-op 확인.
 - JAR: build/libs/tunit-backend-0.1.0-SNAPSHOT.jar
 - JUnit: build/reports/tests/test/index.html 및 build/test-results/test/
@@ -61,6 +72,6 @@ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 
 이번 작업에서는 상시 Spring/프론트 서버를 시작하지 않았다. 임시 DB는 이미 삭제했으므로 수동 실행에는 별도 개발 DB가 필요하다.
 
-회원가입 정책, 취향 COMPLETE 조건, 카탈로그 공급자·권한·검색 상한, 추천 가중치·미산정 점수, 초대 기간·재사용, 관심 역방향·재신청, 탈퇴·보존 정책은 미확정이다. 업무 API·실제 프론트 연동·JCloud·CI 연결은 미구현이다.
+카탈로그 공급자·권한·검색 상한/정렬, 장르 분포·추천 가중치·미산정 점수, 초대 기간·재사용, 관심 역방향·재신청, 탈퇴·보존 정책은 미확정이다. 음악 검색·개인 프로필 분석·추천·초대·관심 업무, 실제 프론트 연동·JCloud·CI 연결은 미구현이다. 전체 경로의 구현/보류 범위는 [추가 API 검토](../docs/backend-api-gap-review.md)에 있다.
 
 기술 근거: [Spring Boot 요구사항](https://docs.spring.io/spring-boot/system-requirements.html), [세션 저장](https://docs.spring.io/spring-security/reference/servlet/authentication/session-management.html), [CSRF](https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html). Gradle Wrapper 9.5.1 배포 SHA-256을 고정하고 실제 실행했다.

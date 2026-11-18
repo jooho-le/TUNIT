@@ -193,11 +193,11 @@ describe("front-end route and interaction flows", () => {
       "missing@example.com",
     );
     await user.type(screen.getByLabelText("비밀번호"), "bad-password");
-    await user.click(screen.getByRole("button", { name: /이어 듣기/ }));
+    await user.click(screen.getByRole("button", { name: /로그인하기/ }));
     expect(await screen.findByRole("alert")).toBeVisible();
     expect(screen.getByLabelText("이메일")).toHaveValue("missing@example.com");
     expect(screen.getByLabelText("비밀번호")).toHaveValue("bad-password");
-    expect(screen.getByRole("button", { name: /이어 듣기/ })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /로그인하기/ })).toBeEnabled();
     expect(await api.me()).toBeNull();
   });
 
