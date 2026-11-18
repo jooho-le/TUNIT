@@ -1,0 +1,67 @@
+/* Board chrome is deliberately separate from the exported product styles. */
+.atlas-body { margin:0; background:#363636; color:#f5f4ee; font-family:"DM Sans","Noto Sans KR",sans-serif; }
+.atlas-body * { box-sizing:border-box; }
+.atlas-toolbar { position:fixed; z-index:1000; inset:0 0 auto; height:58px; background:#202020; border-bottom:1px solid #64645c; display:flex; align-items:center; gap:14px; padding:10px 22px; font-size:11px; white-space:nowrap; }
+.atlas-toolbar strong { margin-right:auto; font-size:12px; letter-spacing:.08em; }
+.atlas-toolbar button,.atlas-toolbar a,.atlas-toolbar select { background:#353535; border:1px solid #66665b; color:#f5f4ee; padding:7px 10px; font:inherit; text-decoration:none; cursor:pointer; }
+.atlas-toolbar label { display:flex; align-items:center; gap:8px; }
+.atlas-toolbar > span { color:#aaa99f; }
+.atlas-toolbar output { min-width:38px; text-align:center; }
+.atlas-toolbar #export-html { background:#fff21a; color:#171717; border-color:#fff21a; }
+.atlas-stage { position:relative; margin-top:58px; }
+.atlas-board { width:7600px; padding:120px 120px 80px; background:#464642; transform-origin:0 0; }
+.atlas-cover { margin-bottom:150px; }
+.atlas-cover-top,.atlas-cover-bottom,.atlas-title-row { display:flex; justify-content:space-between; gap:80px; }
+.atlas-cover-top { border-top:2px solid #d7d6cc; padding-top:24px; font-size:22px; letter-spacing:.06em; color:#c4c3b8; }
+.atlas-title-row { padding:55px 0; align-items:center; }
+.atlas-title-row h1 { font-family:"Cormorant Garamond",serif; font-style:italic; font-weight:300; font-size:280px; line-height:.8; letter-spacing:-.065em; margin:0 0 40px; }
+.atlas-title-row h1 span { color:#fff21a; }
+.atlas-title-row p { font-size:40px; font-weight:400; margin:0; letter-spacing:-.04em; }
+.atlas-count { display:flex; align-items:center; gap:35px; padding-right:5px; }
+.atlas-count > strong { padding:30px; color:#171717; background:#fff21a; font-size:108px; font-weight:400; line-height:1; }
+.atlas-count > span { color:#d3d1c5; font-size:21px; line-height:1.8; }
+.atlas-cover-bottom { border-top:1px solid #919186; padding-top:32px; align-items:flex-start; }
+.atlas-cover-bottom p { font-size:26px; line-height:1.8; margin:0; }
+.atlas-cover-bottom p > span { font-size:19px; color:#c3c1b7; }
+.atlas-cover-bottom nav { display:grid; grid-template-columns:repeat(4,auto); gap:20px 48px; padding-top:8px; }
+.atlas-cover-bottom nav a { font-size:20px; color:#f5f4ee; text-decoration:none; }
+.atlas-group { margin-bottom:140px; }
+.atlas-group-heading { display:flex; align-items:flex-start; gap:32px; margin-bottom:45px; padding-top:35px; border-top:1px solid #8d8d80; }
+.atlas-number { display:grid; place-items:center; width:85px; height:100px; font-size:36px; background:#31312e; color:#fff21a; }
+.atlas-group-heading p { font-size:18px; letter-spacing:.08em; margin:0 0 12px; color:#cbc9bd; }
+.atlas-group-heading h2 { font-size:42px; letter-spacing:-.04em; margin:0 0 16px; font-weight:400; }
+.atlas-group-heading div > span { font-size:20px; color:#c3c1b7; }
+.atlas-group-heading > b { margin-left:auto; font-weight:400; font-size:21px; color:#c3c1b7; }
+.atlas-grid { display:grid; grid-template-columns:repeat(5,1440px); column-gap:40px; row-gap:64px; align-items:start; }
+.atlas-frame { width:1440px; min-width:0; }
+.atlas-frame-label { display:flex; justify-content:space-between; align-items:baseline; gap:18px; padding-bottom:13px; }
+.atlas-frame-label > div { display:flex; align-items:baseline; gap:18px; }
+.atlas-frame-label span { font-size:22px; color:#fff21a; }
+.atlas-frame-label h3 { margin:0; font-size:25px; font-weight:400; letter-spacing:-.035em; }
+.atlas-frame-label b { font-size:17px; font-weight:400; color:#cbc9bd; }
+.atlas-frame-route { margin:0 0 16px; display:flex; justify-content:space-between; color:#c3c1b7; font-size:16px; }
+.atlas-frame-caption { display:flex; justify-content:space-between; margin:14px 0 0; color:#cac8ba; font-size:15px; }
+.atlas-frame-caption > span { opacity:.7; }
+.screen-viewport { width:1440px; container-type:size; container-name:screen; background:#171717; outline:1px solid #75756c; overflow:hidden; }
+.design-screen { width:100%; height:100%; position:relative; transform:translateZ(0); overflow:hidden; line-height:normal; color:#f5f4ee; background:#171717; pointer-events:none; isolation:isolate; }
+/* Freeze entrances at their visible end state. Keep intentional decorative transforms. */
+.design-screen *,.design-screen *::before,.design-screen *::after { animation:none!important; transition:none!important; caret-color:transparent!important; }
+.design-screen [data-reveal],.design-screen [data-motion],.design-screen .landing-wordmark-stage h1,.design-screen .landing-intro-center h1 > span { opacity:1!important; visibility:visible!important; translate:none!important; }
+.design-screen [data-reveal],.design-screen [data-motion] { transform:none!important; }
+.design-screen .landing-story-content { opacity:1!important; }
+.design-screen .landing-page[data-export-focus]:not([data-export-focus=".landing-hero"]) .landing-story-content { padding-top:calc(var(--editorial-header-height) + 38px); }
+.design-screen .landing-story-introduction { padding:35px 0 55px; }
+.design-screen .landing-intro { opacity:1!important; }
+.design-screen .page-footer { position:relative; }
+.atlas-foundations { border-top:2px solid #c7c5b8; padding-top:55px; }
+.atlas-foundations-title > span { font-size:21px; letter-spacing:.08em; color:#d5d3c5; }
+.atlas-foundations-title h2 { font-weight:400; margin:22px 0; font-size:48px; letter-spacing:-.04em; }
+.atlas-foundations-title p { font-size:23px; color:#c3c1b7; }
+.atlas-swatches { display:grid; grid-template-columns:1fr 1fr 1fr 1.7fr; gap:70px; margin:65px 0; }
+.atlas-swatches > div { display:flex; flex-direction:column; gap:20px; }
+.atlas-swatches i { width:145px; height:145px; border:1px solid #a7a69a; }
+.atlas-swatches strong { font-size:25px; font-weight:400; }
+.atlas-swatches span { font-size:22px; color:#cccabd; }
+.atlas-type em { font-family:"Cormorant Garamond",serif; font-weight:300; font-size:85px; letter-spacing:-.04em; }
+.atlas-footnote { border-top:1px solid #8d8d80; padding-top:30px; font-size:20px; color:#cac8ba; }
+@media print { .atlas-toolbar { display:none; } .atlas-stage { margin:0; } .atlas-board { transform:none!important; } }

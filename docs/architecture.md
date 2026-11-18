@@ -40,7 +40,7 @@
 
 ## 라우팅과 랜딩
 
-정적 호스팅에서도 경로에 직접 진입할 수 있도록 HashRouter를 사용한다. 화면 URL은 `/#/home` 형식이고 API 주소는 hash와 무관한 `/api/v1`이다. 앱 메뉴는 Home·Discover·Music·My Taste이며 작은 화면에서는 하단 메뉴를 제공한다.
+정적 호스팅에서도 경로에 직접 진입할 수 있도록 HashRouter를 사용한다. 화면 URL은 `/#/home` 형식이고 API 주소는 hash와 무관한 `/api/v1`이다. 앱 메뉴는 Home·Discover·Music·My Taste이며 공통 상단 메뉴와 데스크톱·모바일 공통 하단 릴을 제공한다. 랜딩의 릴은 스크롤 챕터, 로그인 후에는 앱 경로에 연결된다.
 
 공개 랜딩은 세션 조회와 독립적으로 표시한다. 시작 CTA만 `/start`에서 인증·취향 상태를 확인한다. 컴포넌트 분리와 실제 인트로 범위는 [화면 지도](screens.md#s01-랜딩), 시각 기준은 [DESIGN.md](../DESIGN.md)에 있다.
 

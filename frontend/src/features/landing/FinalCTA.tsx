@@ -10,37 +10,31 @@ export default function FinalCTA() {
       data-loop-scene
       aria-labelledby="landing-final-title"
     >
-      <div className="landing-connection-map" aria-hidden="true">
-        <svg viewBox="0 0 1000 430" fill="none">
-          <path d="M85 115C250 20 270 355 500 210S740 45 915 310M180 360C300 255 330 100 500 210S720 395 860 95M500 210V30M500 210V410" />
-          <circle cx="500" cy="210" r="98" />
-          <circle cx="500" cy="210" r="145" />
-        </svg>
-        <span className="landing-map-node node-one">
-          <Icon name="music" size={28} />
-        </span>
-        <span className="landing-map-node node-two">
-          <Icon name="headphones" size={28} />
-        </span>
-        <span className="landing-map-node node-three">
-          <Icon name="spark" size={28} />
-        </span>
-        <span className="landing-map-node node-four">
-          <Icon name="user" size={28} />
-        </span>
-        <span className="landing-map-center">T.</span>
+      <div className="landing-final-title" aria-hidden="true">
+        Stay curious.
+        <br />
+        <em>Find your people.</em>
       </div>
       <div className="landing-final-copy" data-reveal>
-        <p className="landing-kicker">YOUR PEOPLE ARE ON YOUR FREQUENCY.</p>
+        <p className="landing-kicker">[ YOUR PEOPLE ARE ON YOUR FREQUENCY. ]</p>
         <h2 id="landing-final-title">
           다음 연결의 시작은,
           <br />
-          <em>당신의 취향.</em>
+          당신의 취향.
         </h2>
         <Link className="landing-action" to="/start">
-          지금 시작하기 <Icon name="arrow" />
+          지금 시작하기 <Icon name="arrow" size={20} />
         </Link>
         <p>같은 음악에서, 새로운 우리로.</p>
+      </div>
+      <div className="landing-connection-map" aria-hidden="true">
+        <svg viewBox="0 0 650 70" fill="none">
+          <path d="M25 35H625" />
+          <circle cx="25" cy="35" r="7" />
+          <circle cx="225" cy="35" r="7" />
+          <circle cx="425" cy="35" r="7" />
+          <circle cx="625" cy="35" r="7" />
+        </svg>
       </div>
     </section>
   );

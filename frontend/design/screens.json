@@ -1,0 +1,390 @@
+[
+  {
+    "key": "S01-A",
+    "screen": "S01",
+    "title": "브랜드 인트로",
+    "focus": ".landing-intro",
+    "route": "/landing",
+    "group": 0,
+    "height": 1000,
+    "user": null,
+    "motion": true
+  },
+  {
+    "key": "S01-B",
+    "screen": "S01",
+    "title": "랜딩 · 메인 타이틀",
+    "focus": ".landing-hero",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S01-C1",
+    "screen": "S01",
+    "title": "랜딩 · 취향을 기록하다",
+    "focus": "#landing-taste",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S01-C2",
+    "screen": "S01",
+    "title": "랜딩 · 같은 취향의 사람",
+    "focus": "#landing-twin",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S01-C3",
+    "screen": "S01",
+    "title": "랜딩 · 새로운 음악",
+    "focus": "#landing-discovery",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S01-C4",
+    "screen": "S01",
+    "title": "랜딩 · 친구와 비교",
+    "focus": "#landing-friends",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S01-D",
+    "screen": "S01",
+    "title": "랜딩 · 시작하기",
+    "focus": ".landing-final",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "MENU",
+    "screen": "S01",
+    "title": "전체 메뉴 · 펼친 상태",
+    "route": "/landing",
+    "group": 0,
+    "height": 1100,
+    "user": null
+  },
+  {
+    "key": "S02-A",
+    "screen": "S02",
+    "title": "로그인",
+    "route": "/login",
+    "group": 1,
+    "height": 1250,
+    "user": null
+  },
+  {
+    "key": "S02-B",
+    "screen": "S02",
+    "title": "회원가입",
+    "route": "/login",
+    "group": 1,
+    "height": 1450,
+    "user": null
+  },
+  {
+    "key": "S03",
+    "screen": "S03",
+    "title": "온보딩 · 시작",
+    "route": "/onboarding/intro",
+    "group": 1,
+    "height": 1250
+  },
+  {
+    "key": "S04",
+    "screen": "S04",
+    "title": "아티스트 5명 선택",
+    "route": "/onboarding/artists",
+    "group": 1,
+    "height": 1900
+  },
+  {
+    "key": "S05",
+    "screen": "S05",
+    "title": "좋아하는 곡 10개 선택",
+    "route": "/onboarding/tracks",
+    "group": 1,
+    "height": 2400
+  },
+  {
+    "key": "S06",
+    "screen": "S06",
+    "title": "장르와 무드 선택",
+    "route": "/onboarding/mood",
+    "group": 1,
+    "height": 1650
+  },
+  {
+    "key": "S07-A",
+    "screen": "S07",
+    "title": "취향 분석 중",
+    "route": "/onboarding/analyzing",
+    "group": 1,
+    "height": 1100
+  },
+  {
+    "key": "S07-B",
+    "screen": "S07",
+    "title": "분석 연결 실패 · 기본 취향",
+    "route": "/onboarding/analyzing",
+    "group": 1,
+    "height": 1200,
+    "offline": true,
+    "expected": "연결은 잠시 멈춰도,"
+  },
+  {
+    "key": "S08",
+    "screen": "S08",
+    "title": "취향 분석 결과",
+    "route": "/taste",
+    "group": 2,
+    "height": 2400
+  },
+  {
+    "key": "S09",
+    "screen": "S09",
+    "title": "로그인 후 홈",
+    "route": "/home",
+    "group": 2,
+    "height": 2000
+  },
+  {
+    "key": "S24",
+    "screen": "S24",
+    "title": "혼자 취향 탐색",
+    "route": "/solo",
+    "group": 2,
+    "height": 2400
+  },
+  {
+    "key": "S14-A",
+    "screen": "S14",
+    "title": "마이페이지 · 취향 공개",
+    "route": "/my",
+    "group": 2,
+    "height": 2900
+  },
+  {
+    "key": "S14-B",
+    "screen": "S14",
+    "title": "마이페이지 · 삭제 확인",
+    "route": "/my",
+    "group": 2,
+    "height": 3100
+  },
+  {
+    "key": "S10",
+    "screen": "S10",
+    "title": "취향이 맞는 사람 찾기",
+    "route": "/discover",
+    "group": 3,
+    "height": 1750
+  },
+  {
+    "key": "S26",
+    "screen": "S26",
+    "title": "추천 후보 없음",
+    "route": "/empty",
+    "group": 3,
+    "height": 1300
+  },
+  {
+    "key": "S11",
+    "screen": "S11",
+    "title": "상대 프로필",
+    "route": "/people/:id",
+    "group": 3,
+    "height": 2400
+  },
+  {
+    "key": "S12",
+    "screen": "S12",
+    "title": "취향 궁합 상세 비교",
+    "route": "/matches/:id",
+    "group": 3,
+    "height": 2900
+  },
+  {
+    "key": "S13",
+    "screen": "S13",
+    "title": "새로운 음악 발견",
+    "route": "/music",
+    "group": 3,
+    "height": 2700
+  },
+  {
+    "key": "PRIVATE",
+    "screen": "403",
+    "title": "상대 취향 비공개 · 접근 안내",
+    "route": "/people/:id",
+    "group": 3,
+    "height": 1100,
+    "expected": "공개 범위와 권한을 확인해 주세요."
+  },
+  {
+    "key": "S25-A",
+    "screen": "S25",
+    "title": "친구 초대 만들기",
+    "route": "/invite",
+    "group": 4,
+    "height": 1400
+  },
+  {
+    "key": "S25-B",
+    "screen": "S25",
+    "title": "초대 링크 · 친구 참여 대기",
+    "route": "/invite/:id",
+    "group": 4,
+    "height": 1300
+  },
+  {
+    "key": "S25-C",
+    "screen": "S25",
+    "title": "받은 초대 · 비교 동의",
+    "route": "/invite/:id",
+    "group": 4,
+    "height": 1400,
+    "user": 1
+  },
+  {
+    "key": "S25-D",
+    "screen": "S25",
+    "title": "친구 취향 입력 대기",
+    "route": "/invite/:id",
+    "group": 4,
+    "height": 1350
+  },
+  {
+    "key": "S25-E",
+    "screen": "S25",
+    "title": "양쪽 공개·동의 필요",
+    "route": "/invite/:id",
+    "group": 4,
+    "height": 1400,
+    "user": 1
+  },
+  {
+    "key": "S25-F",
+    "screen": "S25",
+    "title": "초대 링크 만료",
+    "route": "/invite/:id",
+    "group": 4,
+    "height": 1200
+  },
+  {
+    "key": "S27",
+    "screen": "S27",
+    "title": "친구와 1:1 궁합 결과",
+    "route": "/friends/:id",
+    "group": 4,
+    "height": 2900
+  },
+  {
+    "key": "S15",
+    "screen": "S15",
+    "title": "관심 보내기",
+    "route": "/interest/:id",
+    "group": 5,
+    "height": 1550
+  },
+  {
+    "key": "S16-A",
+    "screen": "S16",
+    "title": "보낸 관심 · 응답 대기",
+    "route": "/interests/sent",
+    "group": 5,
+    "height": 1450
+  },
+  {
+    "key": "S16-B",
+    "screen": "S16",
+    "title": "보낸 관심 · 요청 취소",
+    "route": "/interests/sent",
+    "group": 5,
+    "height": 1400
+  },
+  {
+    "key": "S19-A",
+    "screen": "S19",
+    "title": "받은 관심 · 수락과 거절",
+    "route": "/interests/inbox",
+    "group": 5,
+    "height": 1500
+  },
+  {
+    "key": "S19-B",
+    "screen": "S19",
+    "title": "받은 관심 · 거절 완료",
+    "route": "/interests/inbox",
+    "group": 5,
+    "height": 1450
+  },
+  {
+    "key": "S20",
+    "screen": "S20",
+    "title": "상호 수락 · 연결 목록",
+    "route": "/connections",
+    "group": 5,
+    "height": 1500
+  },
+  {
+    "key": "S17",
+    "screen": "S17",
+    "title": "팔로우",
+    "route": "/follow/:id",
+    "group": 6,
+    "height": 1150,
+    "tier": "P1 · 로컬 UI"
+  },
+  {
+    "key": "S18",
+    "screen": "S18",
+    "title": "궁합 카드 공유",
+    "route": "/share/:id",
+    "group": 6,
+    "height": 1750,
+    "tier": "P1 · 로컬 UI"
+  },
+  {
+    "key": "S21",
+    "screen": "S21",
+    "title": "연결 후 대화 · 안내",
+    "route": "/chat/:id",
+    "group": 6,
+    "height": 1300,
+    "tier": "P2 · 예약 화면"
+  },
+  {
+    "key": "S22",
+    "screen": "S22",
+    "title": "공동 플레이리스트 · 안내",
+    "route": "/playlist/:id",
+    "group": 6,
+    "height": 1300,
+    "tier": "P2 · 예약 화면"
+  },
+  {
+    "key": "S23",
+    "screen": "S23",
+    "title": "음악 피드 · 안내",
+    "route": "/feed",
+    "group": 6,
+    "height": 1300,
+    "tier": "P2 · 예약 화면"
+  }
+]

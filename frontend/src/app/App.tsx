@@ -1,9 +1,8 @@
-import { Component, useEffect, useRef, type ReactNode } from "react";
+import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   HashRouter,
   Link,
   Navigate,
-  NavLink,
   Outlet,
   Route,
   Routes,
@@ -11,10 +10,10 @@ import {
 } from "react-router-dom";
 import { SessionProvider, useSession } from "./Session";
 import { attachScrollMotion } from "../hooks/scrollMotion";
-import { Icon, Wordmark } from "../components/ui";
 import { ErrorNotice, Loading } from "../components/Feedback";
 import LandingPage from "../features/landing/LandingPage";
-import { scrollToLandingSection } from "../features/landing/content";
+import EditorialHeader from "../components/shell/EditorialHeader";
+import EditorialReel from "../components/shell/EditorialReel";
 import Auth from "../features/auth/Auth";
 import Onboarding from "../features/taste/Onboarding";
 import Home from "../pages/Home";
@@ -34,12 +33,6 @@ import {
 } from "../features/interests/Interests";
 import { Follow, Share, Roadmap } from "../features/social/Social";
 
-export const mainNavigation = [
-  { to: "/home", label: "Home", icon: "home" },
-  { to: "/discover", label: "Discover", icon: "discover" },
-  { to: "/music", label: "Music", icon: "music" },
-  { to: "/my", label: "My Taste", icon: "user" },
-] as const;
 function Protected({ requireTaste = true }: { requireTaste?: boolean }) {
   const session = useSession(),
     location = useLocation();
@@ -84,124 +77,57 @@ function Layout() {
   const root = useRef<HTMLElement>(null),
     location = useLocation(),
     session = useSession();
+  const [menuOpen, setMenuOpen] = useState(false);
   const editorial =
-      location.pathname === "/landing" || location.pathname === "/",
-    onboarding = location.pathname.startsWith("/onboarding"),
-    showNav =
-      !!session.user &&
-      !!session.profile?.complete &&
-      !onboarding &&
-      !editorial;
+    location.pathname === "/landing" || location.pathname === "/";
+  const showNav =
+    !!session.user &&
+    !!session.profile?.complete &&
+    !location.pathname.startsWith("/onboarding") &&
+    !editorial;
   useEffect(() => {
     window.scrollTo({ top: 0 });
     root.current?.focus({ preventScroll: true });
-    const node = root.current;
-    if (node) return attachScrollMotion(node);
+    if (root.current) return attachScrollMotion(root.current);
+  }, [location.pathname]);
+  useEffect(() => {
+    setMenuOpen(false);
   }, [location.pathname]);
   return (
-    <div className={`app ${editorial ? "is-editorial" : ""}`}>
+    <div className={`app freshman-shell ${editorial ? "is-editorial" : ""}`}>
       <a
         className="skip-link"
         href="#main-content"
-        onClick={(e) => {
-          e.preventDefault();
+        onClick={(event) => {
+          event.preventDefault();
           root.current?.focus();
         }}
       >
         본문으로 건너뛰기
       </a>
-      <header className={`site-header ${editorial ? "landing-header" : ""}`}>
-        <Link className="brand" aria-label="TUNIT 처음으로" to="/landing">
-          <Wordmark />
-        </Link>
-        <span className="header-caption">
-          MUSIC IS PERSONAL.
-          <br />
-          CONNECTION IS HUMAN.
-        </span>
-        {editorial ? (
-          <>
-            <nav className="landing-header-nav" aria-label="랜딩 메뉴">
-              <a
-                href="#landing-stories"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToLandingSection("landing-stories");
-                }}
-              >
-                취향을 잇는 방법
-              </a>
-              <a
-                href="#landing-friends"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToLandingSection("landing-friends");
-                }}
-              >
-                친구와 비교
-              </a>
-            </nav>
-            <div className="landing-header-actions">
-              <Link to={session.user ? "/my" : "/login"}>
-                {session.user ? "내 취향" : "로그인"}
-              </Link>
-              <Link className="landing-header-start" to="/start">
-                시작하기 <Icon name="arrow" size={15} />
-              </Link>
-            </div>
-          </>
-        ) : (
-          <>
-            <nav className="site-nav" aria-label="메인 메뉴">
-              {mainNavigation.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) => (isActive ? "active" : "")}
-                >
-                  {item.label.toUpperCase()}
-                </NavLink>
-              ))}
-            </nav>
-            {session.user ? (
-              <Link className="header-account" to="/my">
-                {session.user.nickname}
-              </Link>
-            ) : (
-              <Link className="header-account" to="/login">
-                로그인
-              </Link>
-            )}
-          </>
-        )}
-      </header>
+      <EditorialHeader
+        landing={editorial}
+        open={menuOpen}
+        onOpenChange={setMenuOpen}
+      />
       <main
         id="main-content"
         ref={root}
         tabIndex={-1}
-        className={`content ${editorial ? "route-landing editorial-canvas" : "application-canvas"} ${showNav ? "has-mobile-nav" : ""}`}
+        inert={menuOpen || undefined}
+        aria-hidden={menuOpen || undefined}
+        className={`content ${editorial ? "route-landing editorial-canvas" : "application-canvas"}`}
       >
         {!session.ready && !editorial ? <Loading /> : <Outlet />}
         <footer className="page-footer">
           <span>© TUNIT 2026</span>
           <Link to="/landing">SAME TASTE. NEW CONNECTION. ↗</Link>
-          <span>FIND YOUR FREQUENCY.</span>
+          <span>[ GOOD MUSIC. BETTER PEOPLE. ]</span>
         </footer>
       </main>
-      {showNav && (
-        <nav className="bottom-navigation" aria-label="하단 내비게이션">
-          {mainNavigation.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-      )}
+      <div inert={menuOpen || undefined} aria-hidden={menuOpen || undefined}>
+        <EditorialReel landing={editorial} authenticated={showNav} />
+      </div>
     </div>
   );
 }
