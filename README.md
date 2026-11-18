@@ -2,7 +2,7 @@
 
 음악 취향으로 나를 발견하고 사람을 연결하는 웹 프론트. React + TypeScript + Vite + React Router를 사용한다.
 
-현재 동작 범위는 **브라우저 로컬 데모**다. 가입·취향 관리·친구 비교·관심 요청 UI를 체험할 수 있으며, Spring Boot·PostgreSQL·JCloud는 구조와 설정 초안만 준비되어 있다.
+프론트는 **브라우저 로컬 데모**로 가입·취향 관리·친구 비교·관심 요청 UI를 체험할 수 있다. 별도로 Spring Boot·PostgreSQL의 14개 테이블·JPA·공통 오류·세션 인증 기반을 구현하고 검증했다. 실제 프론트 연동·업무 API·JCloud 배포는 아직 진행하지 않았다.
 
 개발 흐름은 **작업 브랜치 → dev → main**이다. 현재 코드는 `dev`에 통합하고, `main`은 개발 완료 후 반영한다. 자세한 기준은 [브랜치 운영](docs/git-workflow.md)에 있다.
 
@@ -41,6 +41,8 @@ npm run dev
 | 화면별 경로·랜딩 동작         | [화면 지도](docs/screens.md)         |
 | 코드 구조·데이터·백엔드 경계  | [아키텍처](docs/architecture.md)     |
 | 미래 Spring API 요청·응답     | [API 계약](docs/api-spec.md)         |
+| 백엔드 기반·PostgreSQL 테스트 | [백엔드 안내](backend/README.md)     |
+| 최신 Notion과 코드의 차이     | [백엔드 설계 비교](docs/backend-design-review.md) |
 | 실행했던 검사와 미검증 범위   | [검증 기록](docs/test-results.md)    |
 | 변경 이력·한국어 커밋 메시지  | [작업 기록](docs/work-log/README.md) |
 | 작업 시 지켜야 할 사용자 지침 | [AGENTS.md](AGENTS.md)               |
@@ -49,7 +51,7 @@ npm run dev
 
 ```text
 frontend/    React 앱·테스트·정적 자산
-backend/     Java 패키지·Gradle·환경 설정 초안
+backend/     Spring Boot·14개 JPA/Repository·Flyway·세션 인증·통합 테스트
 contracts/   OpenAPI 계약 초안
 deploy/      JCloud 역방향 프록시 예시
 docs/        개발·명세·디자인 참고·검증·작업 기록
