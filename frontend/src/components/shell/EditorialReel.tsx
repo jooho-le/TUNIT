@@ -6,12 +6,13 @@ import {
 } from "../../features/landing/content";
 
 const navigation = [
-  { to: "/home", title: "HOME", caption: "나의 주파수", art: "home" },
-  { to: "/discover", title: "DISCOVER", caption: "닮은 취향", art: "twin" },
-  { to: "/music", title: "MUSIC", caption: "다음에 좋아할 곡", art: "music" },
-  { to: "/my", title: "MY TASTE", caption: "취향 아카이브", art: "taste" },
+  { to: "/home", title: "홈", caption: "HOME", art: "home" },
+  { to: "/discover", title: "사람 찾기", caption: "DISCOVER", art: "twin" },
+  { to: "/music", title: "음악 발견", caption: "MUSIC", art: "music" },
+  { to: "/my", title: "내 취향", caption: "MY TASTE", art: "taste" },
 ];
 const labels = ["TASTE PROFILE", "MUSIC TWIN", "NEW FAVORITES", "WITH FRIENDS"];
+const chapterNames = ["취향 분석", "사람 찾기", "음악 발견", "친구와 비교"];
 export default function EditorialReel({
   landing,
   authenticated,
@@ -71,17 +72,10 @@ export default function EditorialReel({
               <span className="editorial-reel-copy">
                 <strong>
                   <small aria-hidden="true">{story.number}</small>
-                  {labels[i]}
+                  {chapterNames[i]}
                 </strong>
                 <span>
-                  {
-                    [
-                      "나를 이루는 음악",
-                      "같은 노래, 다른 우리",
-                      "다음에 좋아하게 될 곡",
-                      "알던 친구, 몰랐던 취향",
-                    ][i]
-                  }
+                  {labels[i]}
                 </span>
               </span>
               <span className="editorial-reel-arrow" aria-hidden="true">

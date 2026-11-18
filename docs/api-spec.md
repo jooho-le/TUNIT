@@ -2,7 +2,7 @@
 
 [문서 안내](README.md) · [아키텍처](architecture.md) · [상태 규칙](state-transitions.md)
 
-프론트가 미래 Spring API에 기대하는 요청·응답이다. **실제 서버 엔드포인트는 미구현**이며 기본 mock 동작을 서버 구현 완료로 취급하지 않는다.
+이 문서는 **기존 프론트 HTTP 어댑터의 이전 제안 계약**을 보존한다. 최신 서버는 인증·가입·본인 취향/설정·활성 태그의 11개 HTTP 작업을 구현했다. 실제 계약은 [backend-foundation.openapi.json](../contracts/backend-foundation.openapi.json), 차이와 보류 경로는 [추가 API 검토](backend-api-gap-review.md)를 따른다. 아래 업무 API가 모두 구현된 것은 아니며 프론트와 자동 호환되지 않는다.
 
 | 기준                  | 위치                                                                                |
 | --------------------- | ----------------------------------------------------------------------------------- |

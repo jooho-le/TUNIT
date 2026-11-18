@@ -78,6 +78,14 @@ describe("editorial navigation and keyboard access", () => {
     expect(
       within(reel).getByRole("link", { name: /MY TASTE/ }),
     ).toHaveAttribute("aria-current", "page");
+    await user.click(
+      within(screen.getByRole("navigation", { name: "주요 메뉴" })).getByRole("link", {
+        name: "사람 찾기",
+      }),
+    );
+    expect(await screen.findByRole("heading", { name: "아직 닿지 않은 주파수." })).toBeVisible();
+    expect(window.location.hash).toBe("#/discover");
+    expect(within(reel).getByRole("link", { name: /DISCOVER/ })).toHaveAttribute("aria-current", "page");
   });
 
   it("lets a chapter click skip the intro and scroll without changing the route hash", async () => {

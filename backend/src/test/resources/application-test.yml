@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${TUNIT_TEST_DB_URL}
+    username: ${TUNIT_TEST_DB_USERNAME}
+    password: ${TUNIT_TEST_DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    clean-disabled: true
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
+logging:
+  level:
+    root: WARN
+    org.springframework.web: WARN

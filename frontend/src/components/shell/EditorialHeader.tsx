@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSession } from "../../app/Session";
 import { Icon } from "../ui";
 
@@ -19,7 +19,7 @@ export default function EditorialHeader({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { user } = useSession(),
+  const { user, profile } = useSession(),
     location = useLocation();
   const trigger = useRef<HTMLButtonElement>(null),
     closeButton = useRef<HTMLButtonElement>(null),
@@ -77,14 +77,21 @@ export default function EditorialHeader({
           aria-label="TUNIT 처음으로"
           to="/landing"
         >
-          t<span>.</span>
+          Tunit<span>.</span>
         </Link>
         <span className="editorial-edition">
-          INDEPENDENT TASTE, SHARED FREQUENCY.
+          같은 취향에서, 새로운 연결로.
           <br />
           <span>[ TUNIT — VOL. 01 / 2026 ]</span>
         </span>
         <div className="editorial-header-actions">
+          {!landing && profile?.complete && (
+            <nav className="editorial-quick-nav" aria-label="주요 메뉴">
+              <NavLink to="/home">홈</NavLink>
+              <NavLink to="/discover">사람 찾기</NavLink>
+              <NavLink to="/music">음악 발견</NavLink>
+            </nav>
+          )}
           <Link className="editorial-account" to={user ? "/my" : "/login"}>
             {user ? "내 취향" : "로그인"}
           </Link>
@@ -104,7 +111,7 @@ export default function EditorialHeader({
               onOpenChange(true);
             }}
           >
-            + MENU
+            + 메뉴
           </button>
         </div>
       </div>
@@ -118,13 +125,13 @@ export default function EditorialHeader({
           aria-label="전체 메뉴"
         >
           <div className="editorial-menu-top">
-            <span>[ SELECT YOUR FREQUENCY ]</span>
+            <span>어디부터 둘러볼까요?</span>
             <button
               ref={closeButton}
               aria-label="메뉴 닫기"
               onClick={() => close()}
             >
-              − CLOSE
+              닫기 −
             </button>
           </div>
           <nav aria-label="화면 이동">
@@ -138,8 +145,8 @@ export default function EditorialHeader({
                 onClick={() => close(false)}
               >
                 <span className="editorial-menu-index">0{i + 1}</span>
-                <span className="editorial-menu-name">{entry.name}</span>
-                <span className="editorial-menu-caption">{entry.label}</span>
+                <span className="editorial-menu-name">{entry.label}</span>
+                <span className="editorial-menu-caption">{entry.name}</span>
                 <Icon name="arrow" size={24} />
               </Link>
             ))}

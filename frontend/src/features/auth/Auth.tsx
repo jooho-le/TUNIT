@@ -153,7 +153,7 @@ export default function Auth() {
             ? "확인하는 중…"
             : mode === "signup"
               ? "내 취향으로 시작하기"
-              : "이어 듣기"}
+              : "로그인하기"}
           <Icon name="arrow" />
         </button>
       </form>

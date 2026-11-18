@@ -4,7 +4,7 @@
 
 ## 전체 구성
 
-현재 실행되는 부분은 React 프론트와 브라우저 로컬 어댑터다. Spring Boot·PostgreSQL·JCloud는 향후 연동 대상이며 프론트 UI 동작과 실제 서버 기능 완성을 구분한다.
+React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·PostgreSQL에는 14개 테이블·JPA·공통 오류·세션 인증 기반을 구현하고 임시 DB에서 검증했다. 프론트 연결과 추천·초대·관심 업무 서비스·JCloud 배포는 아직 구현하지 않았다.
 
 | 경로                                 | 책임                                                               |
 | ------------------------------------ | ------------------------------------------------------------------ |
@@ -14,7 +14,7 @@
 | `frontend/src/api/`                  | 공통 타입·mock·HTTP 어댑터·오류 처리                               |
 | `frontend/src/components/`, `hooks/` | 공통 UI·데이터 로딩·스크롤 모션                                    |
 | `frontend/src/styles/`               | 공통 토큰·기능 화면·랜딩 스타일                                    |
-| `backend/`                           | Java 패키지·설정·테스트/마이그레이션 위치 예약                     |
+| `backend/`                           | Spring Boot·Entity/Repository·V1·공통 오류·세션 인증·PostgreSQL 검사 |
 | `contracts/`                         | OpenAPI 초안                                                       |
 | `deploy/`                            | JCloud 프록시 예시                                                 |
 
@@ -48,6 +48,6 @@
 
 ## 백엔드와 배포 경계
 
-백엔드에는 Java 21 기본 Gradle 설정·패키지·리소스 위치만 있다. Spring 플러그인·의존성·실행 클래스·Controller·Service·Entity·Repository·DB 마이그레이션은 없다. 설정만으로 인증·인가·CSRF·트랜잭션이 구현되지는 않는다.
+백엔드는 Java 21·Spring Boot 4.1.2·Gradle Wrapper 9.5.1이다. 14개 Entity/Repository와 V1, 공통 페이지·오류 DTO, 세션/CSRF·회원가입·본인 취향 CRUD·공개/비교 동의 설정·활성 태그를 제공한다. Controller/Service/Repository를 분리하고 본인 취향 쓰기는 사용자 행 잠금과 단일 트랜잭션을 사용한다. Hibernate는 validate, DDL은 Flyway가 담당한다. 통합 검사는 실제 PostgreSQL 16에서 실행했다.
 
-이후 구성은 Spring Boot REST + Spring Security 세션 + PostgreSQL을 전제로 한다. 최종 JDK/Spring 버전과 JCloud VM·HTTPS·DB 배치·실행 방식은 미확정이다. 자세한 파일 범위는 [백엔드 안내](../backend/README.md), 배포 예시는 [배포 안내](../deploy/README.md)에 있다.
+기존 프론트의 ID·목록·취향 저장·초대 상태는 최신 Notion과 달라 자동 호환되지 않는다. [추가 API 검토](backend-api-gap-review.md)에 사용자가 확정한 가입/취향 완료 기준과 남은 차이를 기록했다. 초대 기한·추천 가중치는 미확정이다. [백엔드 안내](../backend/README.md)·[배포 안내](../deploy/README.md)를 참고한다. 임시 DB는 종료·삭제했으며 운영 DB·JCloud 연동은 미검증이다.

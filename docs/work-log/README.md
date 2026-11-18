@@ -10,3 +10,8 @@
 | 2026-11-10 | DESIGN3 기반 랜딩·프론트 편집 디자인 개편                | [디자인 개편](2026-11-10-freshman-redesign.md)   |
 | 2026-11-10 | 로컬 실행·로그인 방법 안내                               | [실행 안내](2026-11-10-local-run-guide.md)       |
 | 2026-11-10 | 전체 27개 화면·45개 상태의 단일 HTML 디자인 보드        | [디자인 보드](2026-11-10-design-atlas.md)        |
+| 2026-11-19 | 글자·색상 대비·한글 메뉴·홈 행동과 보드 개별 보기 개선 | [가독성 개선](2026-11-19-frontend-readability.md) |
+| 2026-11-19 | Notion 3문서 비교·14개 JPA/Flyway·세션/CSRF·실제 PostgreSQL 검사 | [백엔드 기반](2026-11-19-backend-foundation.md) |
+| 2026-11-19 | 백엔드 재검증·로그인 실패 세션/JSON 타입 수정·동일 DB 27개 검사 2회 | [백엔드 재검증](2026-11-19-backend-verification.md) |
+| 2026-11-19 | backend 브랜치에 백엔드 기반·검증·관련 문서 커밋 및 업로드 | [백엔드 Git 정리](2026-11-19-backend-git-publish.md) |
+| 2026-11-19 | 누락 Notion 3문서 대조·가입/취향/설정/태그 API 7개 추가·43개 검사 | [누락 명세 추가 구현](2026-11-19-backend-missing-specs.md) |
