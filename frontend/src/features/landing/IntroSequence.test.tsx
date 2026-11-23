@@ -57,6 +57,37 @@ describe("three-second app splash", () => {
     expect(complete).toHaveBeenCalledTimes(1);
   });
 
+  it("plays taste, music, people, and brand cuts in order within the same three seconds", () => {
+    motionEnabled();
+    vi.useFakeTimers();
+    const complete = vi.fn();
+    const { container } = render(<MemoryRouter><IntroSequence onComplete={complete} /></MemoryRouter>);
+    const expectShot = (phase: string) => {
+      expect(splash()).toHaveAttribute("data-phase", phase);
+      const visible = container.querySelectorAll("[data-splash-scene]:not([hidden])");
+      expect(visible).toHaveLength(1);
+      expect(visible[0]).toHaveAttribute("data-splash-scene", phase);
+      expect(visible[0]).toBeVisible();
+    };
+    expectShot("taste");
+    act(() => vi.advanceTimersByTime(659));
+    expectShot("taste");
+    act(() => vi.advanceTimersByTime(1));
+    expectShot("music");
+    act(() => vi.advanceTimersByTime(659));
+    expectShot("music");
+    act(() => vi.advanceTimersByTime(1));
+    expectShot("people");
+    act(() => vi.advanceTimersByTime(719));
+    expectShot("people");
+    act(() => vi.advanceTimersByTime(1));
+    expectShot("brand");
+    act(() => vi.advanceTimersByTime(959));
+    expect(complete).not.toHaveBeenCalled();
+    act(() => vi.advanceTimersByTime(1));
+    expect(complete).toHaveBeenCalledTimes(1);
+  });
+
   it("opens the requested deep link after the timer without replacing its return URL", async () => {
     motionEnabled();
     vi.useFakeTimers();
@@ -134,11 +165,13 @@ describe("three-second app splash", () => {
     expect(document.getElementById("main-content")).toHaveFocus();
   });
 
-  it("cleans up its timeout and keyboard listener when unmounted", () => {
+  it("cleans up its remaining cut timers and keyboard listener when unmounted mid-sequence", () => {
     motionEnabled();
     vi.useFakeTimers();
     const complete = vi.fn();
     const view = render(<MemoryRouter><IntroSequence onComplete={complete} /></MemoryRouter>);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(splash()).toHaveAttribute("data-phase", "music");
     view.unmount();
     act(() => vi.advanceTimersByTime(INTRO_DURATION));
     fireEvent.keyDown(window, { key: "Escape" });

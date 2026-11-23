@@ -1,4 +1,11 @@
 export const INTRO_DURATION = 3000;
+export const SPLASH_SHOTS = [
+  { id: "taste", at: 0 },
+  { id: "music", at: 0.22 },
+  { id: "people", at: 0.44 },
+  { id: "brand", at: 0.68 },
+] as const;
+export type SplashShot = (typeof SPLASH_SHOTS)[number]["id"];
 
 export const stories = [
   {

@@ -2,13 +2,50 @@
   {
     "key": "S01-A",
     "screen": "S01",
-    "title": "3초 스플래시",
+    "title": "스플래시 01 · 취향 프로필",
     "focus": ".landing-intro",
     "route": "/landing",
     "group": 0,
     "height": 1000,
     "user": null,
-    "motion": true
+    "motion": true,
+    "splashPhase": "taste"
+  },
+  {
+    "key": "S01-A2",
+    "screen": "S01",
+    "title": "스플래시 02 · 음악 탐색",
+    "focus": ".landing-intro",
+    "route": "/landing",
+    "group": 0,
+    "height": 1000,
+    "user": null,
+    "motion": true,
+    "splashPhase": "music"
+  },
+  {
+    "key": "S01-A3",
+    "screen": "S01",
+    "title": "스플래시 03 · 새로운 연결",
+    "focus": ".landing-intro",
+    "route": "/landing",
+    "group": 0,
+    "height": 1000,
+    "user": null,
+    "motion": true,
+    "splashPhase": "people"
+  },
+  {
+    "key": "S01-A4",
+    "screen": "S01",
+    "title": "스플래시 04 · Tunit.",
+    "focus": ".landing-intro",
+    "route": "/landing",
+    "group": 0,
+    "height": 1000,
+    "user": null,
+    "motion": true,
+    "splashPhase": "brand"
   },
   {
     "key": "S01-B",

@@ -4,17 +4,18 @@
 
 ## 마지막 앱 검증
 
-최신 검증일은 2026-11-23(KST), 기준은 3초 전체 화면 스플래시를 추가한 `frontend` 파일이다. React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom에서 테스트·빌드·디자인 보드 생성을 실행했다. 이전 초기 검증은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)에 보존한다.
+최신 검증일은 2026-11-23(KST), 기준은 3초 스플래시를 취향·음악·연결·로고 4컷으로 개편한 `frontend` 파일이다. React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom에서 테스트·빌드·디자인 보드 생성을 실행했다. 이전 초기 검증은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)에 보존한다.
 
 | 검사                       | 기록된 결과              | 범위                                                          |
 | -------------------------- | ------------------------ | ------------------------------------------------------------- |
-| `npm test`                 | **55/55 통과**, 7개 파일 | 기존 흐름·3초 타이머·건너뛰기·재생 범위·깊은 링크·저장값 보존·접근성 |
+| `npm test`                 | **56/56 통과**, 7개 파일 | 기존 흐름·4컷 순서/시간 경계·3초 타이머·건너뛰기·깊은 링크·저장값 보존·접근성 |
 | `npm run build`            | **통과**                 | TypeScript strict·Vite production build                       |
-| 디자인 보드 생성           | **1/1 통과**            | 45개 프레임·스플래시 정지 장면·CSS·자산 포함 검사 |
-| Chrome 스플래시 외형       | **확인**                | 이미 실행 중인 TUNIT의 새 탭에서 전체 화면·노란 워드마크·보라 궤도 관찰; 모바일/자동 종료 후 실측은 미완료 |
+| 디자인 보드 생성           | **1/1 통과**            | 48개 프레임·스플래시 컷별 단일 장면·CSS·자산 포함 검사 |
+| 내보내기 TypeScript        | **통과**                | 앱 src·내보내기 검사·보드 템플릿을 포함한 임시 tsconfig의 strict 검사 |
+| Chrome 스플래시 외형       | **확인**                | 로컬 정지 HTML의 네 컷, 1440×1000·390×844 배치; 실제 기기/브라우저 모션 실측 아님 |
 | 의존성 설치 당시 npm audit | **발견 0건**             | Vitest 4.1.12로 조정한 당시 lockfile 검사; 실시간 재검사 아님 |
 
-최신 변경과 한계는 [스플래시 작업 기록](work-log/2026-11-23-app-splash.md)에 있다. 이전 [DESIGN3 개편](work-log/2026-11-10-freshman-redesign.md)과 [문서 정리](work-log/2026-11-10-documentation-cleanup.md)는 각각의 기록에 보존한다.
+최신 변경과 한계는 [4컷 스플래시 작업 기록](work-log/2026-11-23-splash-sequence.md)에 있다. 이전 [스플래시 추가](work-log/2026-11-23-app-splash.md)·[DESIGN3 개편](work-log/2026-11-10-freshman-redesign.md)·[문서 정리](work-log/2026-11-10-documentation-cleanup.md)는 각각의 기록에 보존한다.
 
 ## 자동화 테스트 위치
 
@@ -24,7 +25,7 @@
 | [client.test.ts](../frontend/src/api/client.test.ts)                                | 6    | 쿠키·CSRF 헤더·오류·자동 재시도 차단                                               |
 | [App.test.tsx](../frontend/src/app/App.test.tsx)                                    | 12   | 가입·온보딩·후보 0명·취향 변경/삭제·요청·비공개·로그아웃·외부 링크                 |
 | [LandingPage.test.tsx](../frontend/src/features/landing/LandingPage.test.tsx)       | 5    | 랜딩 본문·4개 소개·세션 대기·상태별 시작 이동·스크롤 |
-| [IntroSequence.test.tsx](../frontend/src/features/landing/IntroSequence.test.tsx)   | 10   | 2999/3000ms 경계·StrictMode·즉시 건너뛰기·Escape·새 앱 재생·저장값 보존·깊은 링크·정리 |
+| [IntroSequence.test.tsx](../frontend/src/features/landing/IntroSequence.test.tsx)   | 11   | 660/1320/2040ms 컷 전환·2999/3000ms 종료·StrictMode·건너뛰기·Escape·재생 범위·저장값·깊은 링크·중간 해제 시 타이머 정리 |
 | [scrollMotion.test.ts](../frontend/src/hooks/scrollMotion.test.ts)                  | 2    | 늦게 마운트된 장면·등장·화면 밖 일시 정지·observer/프레임 정리                     |
 | [EditorialShell.test.tsx](../frontend/src/components/shell/EditorialShell.test.tsx) | 4    | 메뉴 초점·Escape·경로 보호·스크롤 복구·릴 경로/활성 표시·챕터 이동                 |
 
@@ -61,7 +62,7 @@
 
 ## 검증 한계와 다음 단계
 
-- 이미 실행 중인 localhost:5173 TUNIT에서 Chrome 스플래시 외형을 확인했다. 전체 화면의 시각 회귀·터치·모바일 viewport·자동 종료 후 전환 실측·외부 글꼴 다운로드 조건별 검사는 미검증이다.
+- 이번에는 서버 없이 Chrome 로컬 HTML에서 네 컷의 데스크톱·390×844 정지 배치를 확인했다. 컷 전환과 3초 종료는 jsdom 검사 결과이며, 이번 개편의 실제 브라우저 모션 타이밍·자동 종료 후 전환 실측·실기기 터치·외부 글꼴 조건별 검사는 미검증이다.
 - Spring의 BCrypt·세션·CSRF·소유권 강제, PostgreSQL 제약·롤백·동시 트랜잭션은 미구현/미검증이다.
 - JCloud에서 다른 컴퓨터로 수행하는 가입→취향 저장→초대→관심 수락은 미검증이다.
 - 개발·프리뷰·백엔드 서버를 새로 실행하거나 브라우저 설정을 바꾸지 않았다.

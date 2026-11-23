@@ -1,7 +1,8 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../components/ui";
-import { INTRO_DURATION } from "./content";
+import { INTRO_DURATION, SPLASH_SHOTS, type SplashShot } from "./content";
+import SplashScenes from "./SplashScenes";
 
 export default function IntroSequence({
   onComplete,
@@ -9,6 +10,7 @@ export default function IntroSequence({
   onComplete: () => void;
 }) {
   const root = useRef<HTMLElement>(null);
+  const [shot, setShot] = useState<SplashShot>("taste");
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -21,11 +23,15 @@ export default function IntroSequence({
       if (event.key === "Escape") onComplete();
     };
     const timer = window.setTimeout(onComplete, INTRO_DURATION);
+    const cuts = SPLASH_SHOTS.slice(1).map((next) =>
+      window.setTimeout(() => setShot(next.id), INTRO_DURATION * next.at),
+    );
     preference.addEventListener("change", reduce);
     window.addEventListener("keydown", escape);
     reduce();
     return () => {
       window.clearTimeout(timer);
+      cuts.forEach((cut) => window.clearTimeout(cut));
       preference.removeEventListener("change", reduce);
       window.removeEventListener("keydown", escape);
       document.body.style.overflow = previousOverflow;
@@ -37,6 +43,7 @@ export default function IntroSequence({
       tabIndex={-1}
       className="landing-intro app-splash"
       data-screen="S01-A"
+      data-phase={shot}
       aria-label="TUNIT 스플래시"
       style={{ "--intro-duration": `${INTRO_DURATION}ms` } as CSSProperties}
     >
@@ -46,18 +53,8 @@ export default function IntroSequence({
           스플래시 건너뛰기 <Icon name="arrow" size={18} />
         </button>
       </div>
-      <div className="splash-stage">
-        <div className="splash-orbit" aria-hidden="true"><i /><i /><i /></div>
-        <p className="splash-eyebrow">YOUR TASTE. YOUR PEOPLE.</p>
-        <h1 className="splash-wordmark" aria-label="TUNIT 스플래시">
-          {"Tunit.".split("").map((letter, i) => (
-            <span aria-hidden="true" key={i} style={{ animationDelay: `${i * 80}ms` }}>
-              {letter}
-            </span>
-          ))}
-        </h1>
-        <p className="splash-caption">취향이 닿는 순간, 튠잇.</p>
-      </div>
+      <h1 className="splash-accessible-title">TUNIT 스플래시</h1>
+      <SplashScenes active={shot} />
       <div className="splash-bottom">
         <span>SAME SOUND.<br />NEW CONNECTION.</span>
         <Link className="splash-start" to="/start" onClick={onComplete}>
