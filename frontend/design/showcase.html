@@ -5681,80 +5681,170 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   letter-spacing: 0.04em;
   color: var(--muted);
 }
-.design-screen .landing-intro {
+.design-screen .app-splash {
+  --landing-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: fixed;
-  z-index: 40;
-  top: calc(var(--editorial-header-height, 76px) + var(--banner-height, 0px));
-  bottom: calc(var(--reel-height, 96px) + env(safe-area-inset-bottom));
-  left: 0;
-  right: 0;
-  padding: 30px var(--landing-gutter);
+  z-index: 1000;
+  inset: 0;
+  padding: max(24px, env(safe-area-inset-top)) clamp(24px, 4cqw, 72px)
+    max(24px, env(safe-area-inset-bottom));
   background: var(--canvas);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 24px;
+  overflow-y: auto;
+  isolation: isolate;
+  animation: editorial-curtain-out var(--intro-duration) ease both;
 }
-.design-screen .landing-intro-top {
+.design-screen .splash-topline {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: 9px;
-  color: var(--muted);
+  gap: 24px;
+  font-size: 14px;
   letter-spacing: 0.06em;
 }
-.design-screen .landing-intro-center {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.design-screen .splash-topline > span {
+  color: var(--yellow);
 }
-.design-screen .landing-intro-center > p {
-  font-size: 9px;
-  letter-spacing: 0.09em;
+.design-screen .splash-topline small {
+  margin-left: 22px;
   color: var(--muted);
-  margin-bottom: 35px;
+  font-size: 11px;
 }
-.design-screen .landing-intro-center h1 {
+.design-screen .splash-skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 0;
+  background: transparent;
+  font-size: 13px;
+}
+.design-screen .splash-skip:hover {
+  color: var(--yellow);
+}
+.design-screen .splash-stage {
+  position: relative;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 24px;
+  min-height: 0;
+  text-align: center;
+}
+.design-screen .splash-stage > :not(.splash-orbit) {
+  position: relative;
+  z-index: 1;
+}
+.design-screen .splash-eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.17em;
+}
+.design-screen .splash-wordmark {
+  display: inline-flex;
+  margin: 0;
+  padding: 0 0.1em 0.08em 0;
+  overflow: hidden;
+  color: var(--yellow);
   font-family: var(--display-font);
-  font-size: clamp(150px, 28cqw, 980px);
+  font-size: clamp(112px, 27cqw, 500px);
   font-style: italic;
   font-weight: 300;
   letter-spacing: -0.08em;
   line-height: 0.85;
-  display: flex;
-  padding: 0 0.06em 0.08em 0;
-  overflow: hidden;
+  white-space: nowrap;
 }
-.design-screen .landing-intro-center h1 > span {
+.design-screen .splash-wordmark > span {
   display: inline-block;
   animation: editorial-letter-in 950ms var(--landing-ease) both;
 }
-.design-screen .landing-intro-center h1 > span:last-child {
-  color: var(--yellow);
-}
-.design-screen .landing-intro-center > .editorial-handwriting {
-  font-size: 28px;
+.design-screen .splash-wordmark > span:last-child {
   color: var(--purple);
-  padding-top: 15px;
 }
-.design-screen .landing-intro-controls {
+.design-screen .splash-caption {
+  margin: 0;
+  font-size: clamp(16px, 1.5cqw, 22px);
+  letter-spacing: -0.04em;
+}
+.design-screen .splash-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(58cqw, 600px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  animation: splash-orbit-turn var(--intro-duration) ease-out both;
+}
+.design-screen .splash-orbit > i {
+  position: absolute;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.design-screen .splash-orbit > i:first-child {
+  inset: 20% 0;
+}
+.design-screen .splash-orbit > i:nth-child(2) {
+  inset: 0 20%;
+  rotate: 35deg;
+}
+.design-screen .splash-orbit > i:last-child {
+  width: 12px;
+  height: 12px;
+  top: 17%;
+  right: 18%;
+  background: var(--purple);
+  opacity: 1;
+}
+.design-screen .splash-bottom {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 55px;
-  padding-top: 25px;
+  justify-content: space-between;
+  gap: 24px;
 }
-.design-screen .landing-skip {
-  min-height: 44px;
-  background: transparent;
+.design-screen .splash-bottom > span {
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
   color: var(--muted);
+}
+.design-screen .splash-start {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 0;
-  font-size: 11px;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 52px;
+  padding: 14px 22px;
+  background: var(--yellow);
+  color: var(--canvas);
+  font-size: 16px;
 }
-.design-screen .landing-skip:hover {
-  color: var(--yellow);
+.design-screen .splash-start:hover {
+  background: var(--purple);
+}
+.design-screen .splash-track {
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.design-screen .splash-track > span {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+  transform-origin: left;
+  animation: splash-track-fill var(--intro-duration) linear both;
+}
+@keyframes splash-orbit-turn {
+  from { transform: rotate(-35deg) scale(0.86); }
+  to { transform: rotate(35deg) scale(1); }
+}
+@keyframes splash-track-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 .design-screen #landing-stories, .design-screen .landing-story {
   scroll-margin-top: calc(
@@ -6439,35 +6529,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     font-size: 10px;
     gap: 13px;
   }
-  .design-screen .landing-intro {
-    padding: 24px var(--landing-gutter);
-  }
-  .design-screen .landing-intro-top {
-    font-size: 7px;
-  }
-  .design-screen .landing-intro-center > p {
-    font-size: 7px;
-    max-width: 240px;
-    text-align: center;
-    line-height: 1.7;
-    margin-bottom: 35px;
-  }
-  .design-screen .landing-intro-center h1 {
-    font-size: clamp(120px, 36cqw, 270px);
-  }
-  .design-screen .landing-intro-center > .editorial-handwriting {
-    font-size: 20px;
-    text-align: center;
-  }
-  .design-screen .landing-intro-controls {
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 20px;
-  }
-  .design-screen .landing-skip {
-    font-size: 10px;
-    gap: 10px;
-  }
+  .design-screen .splash-topline small { display: none; }
+  .design-screen .splash-stage { gap: 20px; }
+  .design-screen .splash-wordmark { font-size: clamp(100px, 30cqw, 240px); }
+  .design-screen .splash-eyebrow { font-size: 10px; letter-spacing: 0.1em; }
+  .design-screen .splash-orbit { width: 82cqw; }
+  .design-screen .splash-bottom > span { font-size: 10px; }
   .design-screen .landing-story-introduction {
     padding: 65px var(--landing-gutter);
     flex-direction: column;
@@ -6616,38 +6683,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     filter: none;
   }
 }
-.design-screen .landing-intro {
-  overflow-y: auto;
-}
 @container screen (max-height: 620px) {
-  .design-screen .landing-intro {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-  .design-screen .landing-intro-center h1 {
-    font-size: clamp(100px, 25cqh, 200px);
-  }
-  .design-screen .landing-intro-center > p {
-    margin-bottom: 15px;
-  }
-  .design-screen .landing-intro-center > .editorial-handwriting {
-    padding-top: 8px;
-    font-size: 20px;
-  }
-  .design-screen .landing-intro-controls {
-    padding-top: 12px;
-  }
-}
-@container screen (max-height: 440px) {
-  .design-screen .landing-intro-center > p, .design-screen .landing-intro-center > .editorial-handwriting {
-    display: none;
-  }
-  .design-screen .landing-intro-center h1 {
-    font-size: clamp(80px, 22cqh, 110px);
-  }
-}
-.design-screen .landing-intro {
-  animation: editorial-curtain-out var(--intro-duration, 1800ms) ease both;
+  .design-screen .app-splash { padding-top: 12px; padding-bottom: 12px; gap: 16px; }
+  .design-screen .splash-stage { gap: 12px; }
+  .design-screen .splash-wordmark { font-size: min(25cqh, 28cqw); }
 }
 @keyframes editorial-curtain-out {
   0%,
@@ -6659,7 +6698,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   }
 }
 @media (prefers-reduced-motion: reduce), (update: slow) {
-  .design-screen .landing-intro {
+  .design-screen .app-splash, .design-screen .app-splash * {
     animation: none;
   }
 }
@@ -6754,10 +6793,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <b>8 SCREENS</b>
       </header>
       <div class="atlas-grid">
-        <article class="atlas-frame" id="frame-S01-A" data-name="브랜드 인트로" data-screen-id="S01">
-          <header class="atlas-frame-label"><div><span>S01-A</span><h3>브랜드 인트로</h3></div><b>P0 · 현재 프론트</b></header>
+        <article class="atlas-frame" id="frame-S01-A" data-name="3초 스플래시" data-screen-id="S01">
+          <header class="atlas-frame-label"><div><span>S01-A</span><h3>3초 스플래시</h3></div><b>P0 · 현재 프론트</b></header>
           <p class="atlas-frame-route">/landing <span>1440 × 1000</span></p>
-          <div class="screen-viewport" style="height:1000px"><div class="design-screen"><div class="demo-banner" role="note">로컬 프론트 데모 · 계정과 취향은 이 브라우저에만 저장됩니다. 실제 서버 인증·DB와 연결되지 않았습니다.</div><div class="app freshman-shell is-editorial"><a class="skip-link" href="#s01-a-main-content">본문으로 건너뛰기</a><header class="site-header editorial-header"><div class="editorial-header-row"><a class="editorial-glyph" aria-label="TUNIT 처음으로" href="#/landing" data-discover="true">t<span>.</span></a><span class="editorial-edition">INDEPENDENT TASTE, SHARED FREQUENCY.<br><span>[ TUNIT — VOL. 01 / 2026 ]</span></span><div class="editorial-header-actions"><a class="editorial-account" href="#/login" data-discover="true">로그인</a><a class="editorial-start" href="#/start" data-discover="true">시작하기 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></a><button class="editorial-menu-trigger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="editorial-menu" type="button">+ MENU</button></div></div></header><main id="s01-a-main-content" class="content route-landing editorial-canvas"><div class="landing-page" data-screen="S01" data-motion-paused="false"><section class="landing-intro" data-screen="S01-A" aria-label="TUNIT 브랜드 인트로" style="--intro-duration: 1800ms;"><div class="landing-intro-top"><span>[ A TUNIT ORIGINAL ]</span><span>2026 / VOL. 01</span></div><div class="landing-intro-center"><p>EVERY CONNECTION STARTS WITH A SOUND.</p><h1 aria-label="TUNIT 브랜드 인트로"><span style="animation-delay: 0ms;">T</span><span style="animation-delay: 65ms;">u</span><span style="animation-delay: 130ms;">n</span><span style="animation-delay: 195ms;">i</span><span style="animation-delay: 260ms;">t</span><span style="animation-delay: 325ms;">.</span></h1><span class="editorial-handwriting">[ 우리를 이어주는, 아주 작은 취향 ]</span></div><div class="landing-intro-controls"><a class="landing-action" href="#/start" data-discover="true">내 취향 찾기 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></a><button class="landing-skip" type="button">인트로 건너뛰기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></button></div></section></div><footer class="page-footer"><span>© TUNIT 2026</span><a href="#/landing" data-discover="true">SAME TASTE. NEW CONNECTION. ↗</a><span>[ GOOD MUSIC. BETTER PEOPLE. ]</span></footer></main><div><div class="editorial-reel"><div class="editorial-reel-edition"><span>THE TUNIT INDEX</span><span>[ 2026 / VOL. 01 ]</span></div><nav class="editorial-reel-items" aria-label="랜딩 챕터"><a href="#landing-taste"><span class="editorial-reel-art reel-art-taste" aria-hidden="true"><i></i><b></b></span><span class="editorial-reel-copy"><strong><small aria-hidden="true">01</small>TASTE PROFILE</strong><span>나를 이루는 음악</span></span><span class="editorial-reel-arrow" aria-hidden="true">↗</span></a><a href="#landing-twin"><span class="editorial-reel-art reel-art-twin" aria-hidden="true"><i></i><b></b></span><span class="editorial-reel-copy"><strong><small aria-hidden="true">02</small>MUSIC TWIN</strong><span>같은 노래, 다른 우리</span></span><span class="editorial-reel-arrow" aria-hidden="true">↗</span></a><a href="#landing-discovery"><span class="editorial-reel-art reel-art-discovery" aria-hidden="true"><i></i><b></b></span><span class="editorial-reel-copy"><strong><small aria-hidden="true">03</small>NEW FAVORITES</strong><span>다음에 좋아하게 될 곡</span></span><span class="editorial-reel-arrow" aria-hidden="true">↗</span></a><a href="#landing-friends"><span class="editorial-reel-art reel-art-friends" aria-hidden="true"><i></i><b></b></span><span class="editorial-reel-copy"><strong><small aria-hidden="true">04</small>WITH FRIENDS</strong><span>알던 친구, 몰랐던 취향</span></span><span class="editorial-reel-arrow" aria-hidden="true">↗</span></a></nav></div></div></div></div></div>
+          <div class="screen-viewport" style="height:1000px"><div class="design-screen"><div class="demo-banner" role="note">로컬 프론트 데모 · 계정과 취향은 이 브라우저에만 저장됩니다. 실제 서버 인증·DB와 연결되지 않았습니다.</div><div class="app freshman-shell" data-screen="S01"><section class="landing-intro app-splash" data-screen="S01-A" aria-label="TUNIT 스플래시" style="--intro-duration: 3000ms;"><div class="splash-topline"><span>TUNIT <small>MUSIC CONNECTS US.</small></span><button class="splash-skip" type="button">스플래시 건너뛰기 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></button></div><div class="splash-stage"><div class="splash-orbit" aria-hidden="true"><i></i><i></i><i></i></div><p class="splash-eyebrow">YOUR TASTE. YOUR PEOPLE.</p><h1 class="splash-wordmark" aria-label="TUNIT 스플래시"><span aria-hidden="true" style="animation-delay: 0ms;">T</span><span aria-hidden="true" style="animation-delay: 80ms;">u</span><span aria-hidden="true" style="animation-delay: 160ms;">n</span><span aria-hidden="true" style="animation-delay: 240ms;">i</span><span aria-hidden="true" style="animation-delay: 320ms;">t</span><span aria-hidden="true" style="animation-delay: 400ms;">.</span></h1><p class="splash-caption">취향이 닿는 순간, 튠잇.</p></div><div class="splash-bottom"><span>SAME SOUND.<br>NEW CONNECTION.</span><a class="splash-start" href="#/start" data-discover="true">내 취향 찾기 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></a></div><div class="splash-track" aria-hidden="true"><span></span></div></section></div></div></div>
           <p class="atlas-frame-caption">S01-A <span>텍스트 · CSS · SVG / 편집용 정적 장면</span></p>
         </article>
 

@@ -79,7 +79,7 @@ const landing = (key: string, title: string, focus: string): View => ({
   key, screen: "S01", title, focus, route: "/landing", group: 0, height: 1100, user: null,
 });
 const views: View[] = [
-  { ...landing("S01-A", "브랜드 인트로", ".landing-intro"), motion: true, height: 1000 },
+  { ...landing("S01-A", "3초 스플래시", ".landing-intro"), motion: true, height: 1000 },
   landing("S01-B", "랜딩 · 메인 타이틀", ".landing-hero"),
   landing("S01-C1", "랜딩 · 취향을 기록하다", "#landing-taste"),
   landing("S01-C2", "랜딩 · 같은 취향의 사람", "#landing-twin"),

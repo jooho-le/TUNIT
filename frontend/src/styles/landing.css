@@ -188,80 +188,170 @@
   letter-spacing: 0.04em;
   color: var(--muted);
 }
-.landing-intro {
+.app-splash {
+  --landing-ease: cubic-bezier(0.16, 1, 0.3, 1);
   position: fixed;
-  z-index: 40;
-  top: calc(var(--editorial-header-height, 76px) + var(--banner-height, 0px));
-  bottom: calc(var(--reel-height, 96px) + env(safe-area-inset-bottom));
-  left: 0;
-  right: 0;
-  padding: 30px var(--landing-gutter);
+  z-index: 1000;
+  inset: 0;
+  padding: max(24px, env(safe-area-inset-top)) clamp(24px, 4vw, 72px)
+    max(24px, env(safe-area-inset-bottom));
   background: var(--canvas);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 24px;
+  overflow-y: auto;
+  isolation: isolate;
+  animation: editorial-curtain-out var(--intro-duration) ease both;
 }
-.landing-intro-top {
+.splash-topline {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: 9px;
-  color: var(--muted);
+  gap: 24px;
+  font-size: 14px;
   letter-spacing: 0.06em;
 }
-.landing-intro-center {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.splash-topline > span {
+  color: var(--yellow);
 }
-.landing-intro-center > p {
-  font-size: 9px;
-  letter-spacing: 0.09em;
+.splash-topline small {
+  margin-left: 22px;
   color: var(--muted);
-  margin-bottom: 35px;
+  font-size: 11px;
 }
-.landing-intro-center h1 {
+.splash-skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 0;
+  background: transparent;
+  font-size: 13px;
+}
+.splash-skip:hover {
+  color: var(--yellow);
+}
+.splash-stage {
+  position: relative;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 24px;
+  min-height: 0;
+  text-align: center;
+}
+.splash-stage > :not(.splash-orbit) {
+  position: relative;
+  z-index: 1;
+}
+.splash-eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.17em;
+}
+.splash-wordmark {
+  display: inline-flex;
+  margin: 0;
+  padding: 0 0.1em 0.08em 0;
+  overflow: hidden;
+  color: var(--yellow);
   font-family: var(--display-font);
-  font-size: clamp(150px, 28vw, 980px);
+  font-size: clamp(112px, 27vw, 500px);
   font-style: italic;
   font-weight: 300;
   letter-spacing: -0.08em;
   line-height: 0.85;
-  display: flex;
-  padding: 0 0.06em 0.08em 0;
-  overflow: hidden;
+  white-space: nowrap;
 }
-.landing-intro-center h1 > span {
+.splash-wordmark > span {
   display: inline-block;
   animation: editorial-letter-in 950ms var(--landing-ease) both;
 }
-.landing-intro-center h1 > span:last-child {
-  color: var(--yellow);
-}
-.landing-intro-center > .editorial-handwriting {
-  font-size: 28px;
+.splash-wordmark > span:last-child {
   color: var(--purple);
-  padding-top: 15px;
 }
-.landing-intro-controls {
+.splash-caption {
+  margin: 0;
+  font-size: clamp(16px, 1.5vw, 22px);
+  letter-spacing: -0.04em;
+}
+.splash-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  width: min(58vw, 600px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  animation: splash-orbit-turn var(--intro-duration) ease-out both;
+}
+.splash-orbit > i {
+  position: absolute;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.splash-orbit > i:first-child {
+  inset: 20% 0;
+}
+.splash-orbit > i:nth-child(2) {
+  inset: 0 20%;
+  rotate: 35deg;
+}
+.splash-orbit > i:last-child {
+  width: 12px;
+  height: 12px;
+  top: 17%;
+  right: 18%;
+  background: var(--purple);
+  opacity: 1;
+}
+.splash-bottom {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 55px;
-  padding-top: 25px;
+  justify-content: space-between;
+  gap: 24px;
 }
-.landing-skip {
-  min-height: 44px;
-  background: transparent;
+.splash-bottom > span {
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.05em;
   color: var(--muted);
+}
+.splash-start {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 0;
-  font-size: 11px;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 52px;
+  padding: 14px 22px;
+  background: var(--yellow);
+  color: var(--canvas);
+  font-size: 16px;
 }
-.landing-skip:hover {
-  color: var(--yellow);
+.splash-start:hover {
+  background: var(--purple);
+}
+.splash-track {
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.splash-track > span {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+  transform-origin: left;
+  animation: splash-track-fill var(--intro-duration) linear both;
+}
+@keyframes splash-orbit-turn {
+  from { transform: rotate(-35deg) scale(0.86); }
+  to { transform: rotate(35deg) scale(1); }
+}
+@keyframes splash-track-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 #landing-stories,
 .landing-story {
@@ -951,35 +1041,12 @@
     font-size: 10px;
     gap: 13px;
   }
-  .landing-intro {
-    padding: 24px var(--landing-gutter);
-  }
-  .landing-intro-top {
-    font-size: 7px;
-  }
-  .landing-intro-center > p {
-    font-size: 7px;
-    max-width: 240px;
-    text-align: center;
-    line-height: 1.7;
-    margin-bottom: 35px;
-  }
-  .landing-intro-center h1 {
-    font-size: clamp(120px, 36vw, 270px);
-  }
-  .landing-intro-center > .editorial-handwriting {
-    font-size: 20px;
-    text-align: center;
-  }
-  .landing-intro-controls {
-    justify-content: space-between;
-    gap: 20px;
-    padding-top: 20px;
-  }
-  .landing-skip {
-    font-size: 10px;
-    gap: 10px;
-  }
+  .splash-topline small { display: none; }
+  .splash-stage { gap: 20px; }
+  .splash-wordmark { font-size: clamp(100px, 30vw, 240px); }
+  .splash-eyebrow { font-size: 10px; letter-spacing: 0.1em; }
+  .splash-orbit { width: 82vw; }
+  .splash-bottom > span { font-size: 10px; }
   .landing-story-introduction {
     padding: 65px var(--landing-gutter);
     flex-direction: column;
@@ -1134,39 +1201,10 @@
     filter: none;
   }
 }
-.landing-intro {
-  overflow-y: auto;
-}
 @media (max-height: 620px) {
-  .landing-intro {
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-  .landing-intro-center h1 {
-    font-size: clamp(100px, 25svh, 200px);
-  }
-  .landing-intro-center > p {
-    margin-bottom: 15px;
-  }
-  .landing-intro-center > .editorial-handwriting {
-    padding-top: 8px;
-    font-size: 20px;
-  }
-  .landing-intro-controls {
-    padding-top: 12px;
-  }
-}
-@media (max-height: 440px) {
-  .landing-intro-center > p,
-  .landing-intro-center > .editorial-handwriting {
-    display: none;
-  }
-  .landing-intro-center h1 {
-    font-size: clamp(80px, 22svh, 110px);
-  }
-}
-.landing-intro {
-  animation: editorial-curtain-out var(--intro-duration, 1800ms) ease both;
+  .app-splash { padding-top: 12px; padding-bottom: 12px; gap: 16px; }
+  .splash-stage { gap: 12px; }
+  .splash-wordmark { font-size: min(25svh, 28vw); }
 }
 @keyframes editorial-curtain-out {
   0%,
@@ -1178,7 +1216,8 @@
   }
 }
 @media (prefers-reduced-motion: reduce), (update: slow) {
-  .landing-intro {
+  .app-splash,
+  .app-splash * {
     animation: none;
   }
 }

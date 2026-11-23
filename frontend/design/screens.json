@@ -2,7 +2,7 @@
   {
     "key": "S01-A",
     "screen": "S01",
-    "title": "브랜드 인트로",
+    "title": "3초 스플래시",
     "focus": ".landing-intro",
     "route": "/landing",
     "group": 0,

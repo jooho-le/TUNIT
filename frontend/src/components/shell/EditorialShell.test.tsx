@@ -80,7 +80,7 @@ describe("editorial navigation and keyboard access", () => {
     ).toHaveAttribute("aria-current", "page");
   });
 
-  it("lets a chapter click skip the intro and scroll without changing the route hash", async () => {
+  it("opens the chapter reel after skipping the splash and keeps the route hash while scrolling", async () => {
     vi.spyOn(window, "matchMedia").mockImplementation(
       (query) =>
         ({
@@ -97,13 +97,15 @@ describe("editorial navigation and keyboard access", () => {
     });
     render(<App />);
     expect(
-      screen.getByRole("button", { name: /인트로 건너뛰기/ }),
+      screen.getByRole("button", { name: /스플래시 건너뛰기/ }),
     ).toBeVisible();
+    expect(screen.queryByRole("navigation", { name: "랜딩 챕터" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /스플래시 건너뛰기/ }));
     const reel = screen.getByRole("navigation", { name: "랜딩 챕터" });
     fireEvent.click(within(reel).getByRole("link", { name: /MUSIC TWIN/ }));
     await waitFor(() =>
       expect(
-        screen.queryByRole("button", { name: /인트로 건너뛰기/ }),
+        screen.queryByRole("button", { name: /스플래시 건너뛰기/ }),
       ).not.toBeInTheDocument(),
     );
     expect(scroll).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });

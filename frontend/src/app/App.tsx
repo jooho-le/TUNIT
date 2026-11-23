@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   HashRouter,
   Link,
@@ -12,6 +12,7 @@ import { SessionProvider, useSession } from "./Session";
 import { attachScrollMotion } from "../hooks/scrollMotion";
 import { ErrorNotice, Loading } from "../components/Feedback";
 import LandingPage from "../features/landing/LandingPage";
+import IntroSequence from "../features/landing/IntroSequence";
 import EditorialHeader from "../components/shell/EditorialHeader";
 import EditorialReel from "../components/shell/EditorialReel";
 import Auth from "../features/auth/Auth";
@@ -78,6 +79,11 @@ function Layout() {
     location = useLocation(),
     session = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Show once per app load, including refreshes and deep links. Internal navigation preserves this state.
+  const [splashActive, setSplashActive] = useState(
+    () => !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const finishSplash = useCallback(() => setSplashActive(false), []);
   const editorial =
     location.pathname === "/landing" || location.pathname === "/";
   const showNav =
@@ -86,13 +92,21 @@ function Layout() {
     !location.pathname.startsWith("/onboarding") &&
     !editorial;
   useEffect(() => {
+    if (splashActive) return;
     window.scrollTo({ top: 0 });
     root.current?.focus({ preventScroll: true });
     if (root.current) return attachScrollMotion(root.current);
-  }, [location.pathname]);
+  }, [location.pathname, splashActive]);
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
+  if (splashActive) {
+    return (
+      <div className="app freshman-shell" data-screen="S01">
+        <IntroSequence onComplete={finishSplash} />
+      </div>
+    );
+  }
   return (
     <div className={`app freshman-shell ${editorial ? "is-editorial" : ""}`}>
       <a

@@ -1,15 +1,3 @@
-import { INTRO_SEEN_KEY } from "./content";
-
-export function shouldPlayIntro() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    return false;
-  try {
-    return sessionStorage.getItem(INTRO_SEEN_KEY) !== "seen";
-  } catch {
-    return true;
-  }
-}
-
 /** CSS owns animation; this observer only pauses loops offscreen/in background tabs. */
 export function attachLandingMotion(root: HTMLElement) {
   const scenes = root.querySelectorAll<HTMLElement>("[data-loop-scene]");

@@ -1,5 +1,4 @@
-export const INTRO_DURATION = 1800;
-export const INTRO_SEEN_KEY = "tunit-brand-intro-v2";
+export const INTRO_DURATION = 3000;
 
 export const stories = [
   {
