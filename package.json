@@ -9,6 +9,8 @@
     "build": "npm run build --workspace tunit",
     "preview": "npm run preview --workspace tunit",
     "test": "npm run test --workspace tunit",
-    "test:watch": "npm run test:watch --workspace tunit"
+    "test:watch": "npm run test:watch --workspace tunit",
+    "check:copies": "node scripts/check-numbered-copies.mjs",
+    "test:copies": "node --test scripts/check-numbered-copies.test.mjs"
   }
 }

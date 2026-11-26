@@ -23,3 +23,7 @@
 | 2026-11-27 | 3초 스플래시의 frontend 원본 보존·현재 브랜치 미포함 확인 | [스플래시 브랜치 확인](2026-11-27-splash-branch-check.md) |
 | 2026-11-27 | PR #4 문서/디자인 보드 충돌 해결·3초4컷 스플래시와 P0 통합·dev 동기화 | [스플래시 통합·dev 동기화](2026-11-27-splash-conflict-dev-sync.md) |
 | 2026-11-27 | Figma용 단일 HTML49상태·현재 코드 재생성 동일성·3개 검사 확인 | [HTML 최신 확인](2026-11-27-figma-html-current-check.md) |
+| 2026-11-27 | Notion34개 대조·P0개발8개 완료/설계 완료·3개 검증 필요 분리 | [Notion 상태 정리](2026-11-27-notion-task-status-review.md) |
+| 2026-11-27 | pull 뒤 미추적163개 사본·실제 기록 구분·내용 비교와 한계 확인 | [미추적 사본 진단](2026-11-27-git-untracked-copies-diagnosis.md) |
+| 2026-11-27 | 현 위치 유지·번호 사본 검사/실행 전 차단·검사기7개 검증 | [번호 사본 재발 감지](2026-11-27-numbered-copy-detection.md) |
+| 2026-11-27 | 사본163개 백업 분리·전체 검증·감지/기록 보존·frontend 개발 준비 | [사본 정리·frontend 준비](2026-11-27-copy-cleanup-frontend-ready.md) |

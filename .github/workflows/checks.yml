@@ -12,6 +12,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - name: Test numbered-copy detection
+        run: npm run test:copies
       - run: npm ci
       - run: npm test
       - run: npm run build
