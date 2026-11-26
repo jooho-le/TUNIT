@@ -12,6 +12,7 @@ public class ApiErrorWriter {
     private final ObjectMapper mapper;
     public ApiErrorWriter(ObjectMapper mapper) { this.mapper = mapper; }
     public void write(HttpServletRequest request, HttpServletResponse response, ErrorCode code) throws IOException {
+        request.setAttribute(com.tunit.common.api.ApiRequestLogFilter.ERROR_CODE,code.name());
         response.setStatus(code.status().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());

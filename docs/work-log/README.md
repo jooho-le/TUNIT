@@ -16,3 +16,5 @@
 | 2026-11-19 | backend 브랜치에 백엔드 기반·검증·관련 문서 커밋 및 업로드 | [백엔드 Git 정리](2026-11-19-backend-git-publish.md) |
 | 2026-11-19 | 누락 Notion 3문서 대조·가입/취향/설정/태그 API 7개 추가·43개 검사 | [누락 명세 추가 구현](2026-11-19-backend-missing-specs.md) |
 | 2026-11-19 | PR #2 검사 3건 성공·중복 실행·dev 보호 상태·변경 범위 확인 | [PR 검사 확인](2026-11-19-pr-checks-diagnosis.md) |
+| 2026-11-27 | Notion 26문서·Spring P0 30개 API·V2·HTTP 어댑터·72/66 검사·46상태 보드 | [Notion P0 구현](2026-11-27-notion-p0-implementation.md) |
+| 2026-11-27 | 승인 정책·실제 P0 결과를 Notion23페이지/요약속성10건에 반영 | [Notion 결과 반영](2026-11-27-notion-approved-decisions-reflection.md) |

@@ -30,7 +30,7 @@ class DatabaseFoundationTest extends FoundationIntegrationTest {
 
     @Test void flywayCreatesFourteenTablesAndReapplicationIsANoop() {
         assertThat(jdbc.queryForObject("select count(*) from information_schema.tables where table_schema='public' and table_name <> 'flyway_schema_history'", Integer.class)).isEqualTo(14);
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("1");
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("2");
         flyway.validate();
         assertThat(flyway.migrate().migrationsExecuted).isZero();
         assertThat(jdbc.queryForObject("select count(*) from flyway_schema_history where version='1' and success", Integer.class)).isEqualTo(1);

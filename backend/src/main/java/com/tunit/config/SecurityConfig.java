@@ -43,6 +43,7 @@ public class SecurityConfig {
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         http.authorizeHttpRequests(config -> config
             .requestMatchers(HttpMethod.GET, "/api/v1/auth/csrf").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/invitations/{token}").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll()
             .anyRequest().authenticated());

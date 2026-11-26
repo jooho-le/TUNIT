@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { api } from "../../api";
+import { api, apiMode, ApiError } from "../../api";
 import { useResource } from "../../hooks/useResource";
 import {
   Heading,
@@ -60,13 +60,22 @@ export function InterestCompose() {
               await api.sendInterest(userId, note);
               navigate("/interests/sent");
             } catch (e) {
+              if (e instanceof ApiError && (e.status === 0 || e.status >= 500 || e.status === 409)) {
+                try {
+                  const current = await api.interests("sent");
+                  if (current.some(request => request.recipientId === userId && request.status === "PENDING")) {
+                    navigate("/interests/sent");
+                    return;
+                  }
+                } catch { /* Keep the original failure; never retry the write automatically. */ }
+              }
               setError(e as Error);
             } finally {
               setBusy(false);
             }
           }}
         >
-          <label>
+          {apiMode === "mock" && <><label>
             음악으로 건네는 한마디 <span>선택</span>
             <textarea
               name="interest-note"
@@ -77,7 +86,7 @@ export function InterestCompose() {
               placeholder="이 곡을 좋아하는 사람을 만나서 반가워요."
             />
           </label>
-          <div className="composer-count">{note.length} / 140</div>
+          <div className="composer-count">{note.length} / 140</div></>}
           <div className="action-row">
             <button className="button" disabled={busy} type="submit">
               {busy ? "보내는 중…" : "관심 요청 보내기"}
@@ -253,6 +262,9 @@ export function InterestList({ kind }: { kind: "inbox" | "sent" }) {
 
 export function Connections() {
   const resource = useResource(() => api.connections(), "connections");
+  const [confirm, setConfirm] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
   if (resource.loading) return <Loading />;
   if (resource.error)
     return <ErrorNotice error={resource.error} retry={resource.reload} />;
@@ -268,8 +280,9 @@ export function Connections() {
             우리는 연결됐어요.
           </>
         }
-        description="관심 요청이 수락된 연결만 표시합니다."
+        description="현재 연결된 친구만 표시합니다. 연결 해제 뒤에도 과거 수락 기록은 남습니다."
       />
+      {error && <ErrorNotice error={error} />}
       <div className="connection-list">
         {resource.data!.map((c) => (
           <article className="connection-card" key={c.id}>
@@ -287,6 +300,28 @@ export function Connections() {
               <Link className="text-link" to={`/chat/${c.id}`}>
                 음악 대화 <span className="phase-tag">P2 준비중</span>
               </Link>
+              <button className="text-link" disabled={busy} aria-expanded={confirm === c.id}
+                onClick={() => { setConfirm(c.id); setError(null); }}>연결 해제</button>
+              {confirm === c.id && <div className="flow-notice" role="alertdialog" aria-label="친구 연결 해제 확인"
+                onKeyDown={event => { if (event.key === "Escape" && !busy) setConfirm(null); }}>
+                <p>{c.partner.nickname}님과 현재 연결을 해제할까요? 서로의 계정과 취향, 과거 수락 기록은 유지됩니다.</p>
+                <div className="action-row">
+                  <button className="button" disabled={busy} onClick={async () => {
+                    if (busy) return;
+                    setBusy(true); setError(null);
+                    try { await api.disconnect(c.id); setConfirm(null); resource.reload(); }
+                    catch (error) {
+                      // A lost response is not proof of failure. Read state before allowing another DELETE.
+                      try {
+                        const current = await api.connections();
+                        if (!current.some(row => row.id === c.id)) { setConfirm(null); resource.reload(); }
+                        else setError(error as Error);
+                      } catch { setError(error as Error); }
+                    } finally { setBusy(false); }
+                  }}>연결 해제 확인</button>
+                  <button className="text-link" autoFocus disabled={busy} onClick={() => setConfirm(null)}>돌아가기</button>
+                </div>
+              </div>}
             </div>
           </article>
         ))}

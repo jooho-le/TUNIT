@@ -2,6 +2,74 @@
 
 [문서 안내](README.md) · [화면 지도](screens.md) · [작업 기록](work-log/README.md)
 
+## 최신 P0 검증 — 2026-11-27
+
+기준 브랜치 `feature/notion-p0-20261127`, 기준 dev `c69f959`. [Notion 26문서 대조](notion-p0-implementation-review.md)와 사용자 승인 정책을 반영한 결과다. 아래 과거 절의 43개/51개·미구현 설명은 당시 기록이며 현재 결과를 대신하지 않는다.
+
+| 실제 실행 | 결과 | 범위 |
+| --- | --- | --- |
+| `backend/scripts/test-postgres.sh` | **72/72 PASS, FAIL 0, SKIP 0**, bootJar PASS | Spring 필터·MockMvc·트랜잭션·실제 PostgreSQL16.15 |
+| Flyway/DB 조회 | PASS | V1·V2 성공, 업무 테이블 14개, Hibernate validate·재적용 no-op |
+| `npm test` | **66/66 PASS**, 10개 파일 | 기존 mock/DOM + 생성 DTO를 쓰는 HTTP mock fetch + 오류/연결 해제/관심 생성 복구 |
+| `npm run build` | PASS | TypeScript strict·Vite 프로덕션 빌드 |
+| `node frontend/design/generate.mjs` | **3/3 PASS**, 46개 상태 | 기존 S01~S27·연결 해제 확인·전체 HTML 재생성 |
+| 디자인 내보내기 TypeScript | PASS | 기존 앱 tsconfig를 확장해 src와 design의 TS/TSX를 검사 |
+| `node contracts/generate-types.mjs --check` | PASS | OpenAPI → TypeScript 생성본 일치 |
+
+### 서버 테스트 구성
+
+| 클래스 | 개수 | 근거 |
+| --- | ---: | --- |
+| CommonContractTest | 4 | 기존 DTO·공통 오류·페이지 계약 |
+| DatabaseFoundationTest | 9 | 14개 Entity/Repository·V1/V2·FK/CHECK/UNIQUE·롤백·GENRE 강제 경계 |
+| SecurityFoundationTest | 14 | 실제 세션 로그인·세션 ID/CSRF 교체·로그아웃·인증 실패·안전한 오류 |
+| OwnTasteApiTest | 15 | 가입·중복·BCrypt·취향 CRUD·설정·태그·동시성·롤백 |
+| ApiRouteContractTest | 1 | 실제 Controller/Security의 30개 HTTP 작업과 OpenAPI 정확히 대조 |
+| P0WorkflowTest | 24 | 실제 검색/분석/추천/초대/관심/연결 API·권한·DB 동시성·장르 교집합 |
+| P0ValueContractTest | 4 | 누락 특징·Jaccard/cosine·허용 링크·공개 Java record와 schema 필드 대조 |
+| RequestLoggingTest | 1 | UUID 요청 ID·MDC 정리·원문 토큰/쿠키/본문/쿼리 비노출 |
+
+`P0WorkflowTest`는 고정 Clock과 격리 DB fixture를 쓴다. 수락 상태를 먼저 flush한 뒤 실제 PostgreSQL trigger로 연결 INSERT를 실패시켜 상태/버전/연결 전체 롤백을 확인했다. 두 스레드의 요청을 함께 시작해 같은/역방향 생성, 수락/취소, 초대 완료, 연결 해제와 재신청의 결과·DB 행을 확인했다. 무한 재시도·상시 서버가 없다.
+
+프론트 신규 검사는 HTTP wire 변환 7개·가입/필드 오류 2개·연결 해제 4개·관심 생성 응답 실패 2개다. 실제 브라우저나 네트워크 장애를 만든 시험이 아니라 mock fetch/jsdom에서 안전한 UI 동작을 확인한 결과다.
+
+### Notion T01~T44 대응
+
+| 항목 | 이번 증거·한계 |
+| --- | --- |
+| T01~T02 | 가입/중복/해시 및 동시 UNIQUE 경합: 실제 DB PASS |
+| T03~T04 | 인증·CSRF·본인 경계 PASS. 본인 API에 타인 ID를 보내면 거절하며 타인 취향 쓰기 경로 자체를 제공하지 않음 |
+| T05~T08 | 미완료 409·취향 DB CRUD·중복 방지·개인 분석·빈 추천 PASS. 화면/서버 전체 E2E는 별도 |
+| T09~T10 | 실제 두 취향 비교·동의/공개/기한/당사자 확인 PASS |
+| T11~T19 | 자기 요청·중복·역방향·역할·종료 상태·수락/취소 동시성·실제 연결 INSERT 실패 롤백 PASS |
+| T20 | AI 비활성에서 규칙 분석/추천 PASS. AI 클라이언트가 없으므로 실제 AI 타임아웃 주입은 미실행 |
+| T21 | 비공개/탈퇴 후보 은닉·비공개 전환 다음 조회 반영 PASS |
+| T22 | JCloud·외부 PC 브라우저 통합 미실행 |
+| T23~T24 | 로그아웃 후 401·CSRF 없는 변경 403/DB 불변 PASS |
+| T25 | 한 곡/아티스트에 복수 GENRE 저장·조회 PASS |
+| T26 | Entity 생성자 MOOD 거절·조회에서 GENRE 필터 PASS. SQL 직접 입력 강제는 보류하며 그 한계도 테스트로 확인 |
+| T27~T28 | 아티스트/곡 공통 없음+장르 공통 추천, GENRE 부재 null 처리 PASS |
+| T29 | `commonArtistGenres`가 실제 태그 교집합만 반환·track_artists에 일치 플래그 없음 PASS |
+| T30 | artist_genres/track_genres 각각 두 JDBC 동시 INSERT에서 한 행만 저장 PASS. 일반 사용자 장르 등록 HTTP API는 없음 |
+| T31 | 출처별 정규화·중복 가산 방지·0~1·누락 특징 null·대칭성 PASS |
+| T32~T35 | 연결 삭제204·제3자403·중복404·동시204/404·양측 목록/이력 PASS |
+| T36~T37 | 해제/재신청 경합·수락/취소 경합·원자성·해제 후 새 요청 PASS. 가능한 모든 다중 연산 스케줄/부하 시험을 완전히 탐색한 결과는 아님 |
+| T38~T40 | P1 초대 철회 보류·미실행 |
+| T41 | 회원탈퇴/개인정보/세션/FK 정책 확정 전 보류·미실행 |
+| T42 | 본인 취향 초기화만 반영·공용 카탈로그/타인/공개·동의 설정 유지 PASS |
+| T43 | 연결 DELETE 응답 실패 후 GET으로 현재 상태 확인: DOM PASS, 실제 브라우저 네트워크 단절은 미실행 |
+| T44 | 과거 ACCEPTED 유지·현재 연결에서 제거: 실제 DB PASS |
+
+### 발견·수정한 문제와 남은 검증
+
+초기 실행에서 큰 페이지 offset이 500이 되는 문제, 알 수 없는 JSON 필드를 묵인하는 문제를 검출했다. offset 상한은 400, 선언되지 않은 필드는 400으로 수정 후 통과했다. 테스트 fixture의 JDBC Instant 바인딩은 OffsetDateTime으로 정정했다. 개발 중 실패를 성공으로 계산하지 않고 마지막 실행의 XML을 집계했다.
+
+실제 브라우저 쿠키·HTTP→Spring→DB 전체 실행, Figma 반입, Nginx 문법/HTTPS·JCloud, 운영 DB 적용·부하·실제 공급자/데이터 권한은 미검증이다. 기본 mock 설정과 사용자 환경 파일을 바꾸지 않았으며 상시 프론트/Spring 서버를 시작하지 않았다. 검사 후 임시 PostgreSQL은 종료·삭제했다.
+
+로컬 증거: `backend/build/reports/tests/test/index.html`, `backend/build/test-results/test/TEST-*.xml`, `backend/build/reports/postgres-verification.txt`, `backend/build/libs/tunit-backend-0.1.0-SNAPSHOT.jar`. 빌드 산출물/테스트 비밀값은 커밋 대상이 아니다. 최신 변경 파일·명령·보류 사항은 [이번 작업 기록](work-log/2026-11-27-notion-p0-implementation.md)에 정리했다.
+
+## 과거 검증 기록
+
 ## 백엔드 기반 검증 — 2026-11-19
 
 실행 명령은 저장소 루트의 `backend/scripts/test-postgres.sh`다. Java 21·생성한 Gradle Wrapper 9.5.1·Spring Boot 4.1.2·실제 PostgreSQL 16.15를 사용했다. SCRAM 인증을 쓰는 임시 DB에 적용했으며 검사 후 해당 클러스터를 종료·삭제했다. 상시 Spring HTTP 서버·운영 DB·프론트는 실행하지 않았다.
@@ -25,7 +93,7 @@ Security 검사에서 인증·CSRF·입력 오류 및 프로토콜 오류를 확
 
 추가 API·사용자가 승인한 정책과 최신 파일 목록은 [누락 명세 추가 구현 기록](work-log/2026-11-19-backend-missing-specs.md)에 있다. 동시 가입은 사전 중복 검사를 통과하도록 두 요청을 맞춘 뒤 실제 PostgreSQL UNIQUE 경합으로 201/409를 확인했다. 취향 교체는 실제 FK 오류를 주입하고, 초기화는 앞의 두 관계 삭제 후 Repository 장애를 주입해 전체 롤백을 확인했다. PostgreSQL 프로세스 중단·장애 복구 시험은 아니다.
 
-## 마지막 프론트 앱 검증
+## 과거 프론트 앱 검증 — 2026-11-19
 
 검증일은 2026-11-19(KST), 기준은 가독성·행동 구분을 개선한 `frontend` 파일이다. 앱 테스트·빌드와 HTML 보드 생성을 다시 실행했다. React·Vite·Vitest·React Testing Library·jsdom의 기존 검사 환경을 사용했다. 초기 검증 이력은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)에 보존한다.
 

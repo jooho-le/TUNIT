@@ -34,5 +34,11 @@ public class Invitation extends UuidEntity {
     public Instant getExpiresAt() { return expiresAt; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getCompletedAt() { return completedAt; }
+    public void complete(TunitUser recipient, Instant now) {
+        if (status != InvitationStatus.PENDING) throw new com.tunit.common.error.BusinessException(com.tunit.common.error.ErrorCode.INVITATION_ALREADY_USED);
+        if (!now.isBefore(expiresAt)) throw new com.tunit.common.error.BusinessException(com.tunit.common.error.ErrorCode.INVITATION_NOT_FOUND);
+        if (recipient.getId().equals(inviter.getId())) throw new com.tunit.common.error.BusinessException(com.tunit.common.error.ErrorCode.SELF_REQUEST);
+        status=InvitationStatus.COMPLETED; acceptedBy=Objects.requireNonNull(recipient); completedAt=Objects.requireNonNull(now);
+    }
 
 }

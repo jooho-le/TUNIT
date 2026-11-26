@@ -34,5 +34,6 @@ public class TunitUser extends UuidEntity {
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
     public Instant getDeletedAt() { return deletedAt; }
+    public void rename(String nickname,Instant now) { this.nickname=Objects.requireNonNull(nickname); this.updatedAt=Objects.requireNonNull(now); }
 
 }

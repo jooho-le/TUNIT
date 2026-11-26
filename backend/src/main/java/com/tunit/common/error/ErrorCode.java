@@ -21,6 +21,7 @@ public enum ErrorCode {
     REQUEST_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 대기 중인 관심 요청이 있습니다."),
     ALREADY_CONNECTED(HttpStatus.CONFLICT, "이미 연결된 사용자입니다."),
     INVALID_STATE(HttpStatus.CONFLICT, "이미 처리된 요청입니다."),
+    TASTE_INCOMPLETE(HttpStatus.CONFLICT, "취향 입력을 완료해 주세요."),
     CONCURRENT_MODIFICATION(HttpStatus.CONFLICT, "상태가 변경되었습니다. 새로고침해 주세요."),
     INVITATION_ALREADY_USED(HttpStatus.CONFLICT, "이미 완료된 초대입니다."),
     SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "현재 이용할 수 없습니다. 다시 시도해 주세요."),

@@ -35,8 +35,8 @@ export function MatchDetail({
         <div className="venn-center">
           <Icon name="headphones" size={28} />
           <strong>
-            {match.score}
-            <small>%</small>
+            {match.score ?? "정보 부족"}
+            {match.score !== null && <small>%</small>}
           </strong>
           <span>입력 기반 취향 유사도</span>
         </div>
@@ -140,8 +140,8 @@ export function Person({ compare = false }: { compare?: boolean }) {
           </div>
           <div className="profile-score">
             <strong>
-              {match.score}
-              <span>%</span>
+              {match.score ?? "정보 부족"}
+              {match.score !== null && <span>%</span>}
             </strong>
             <div>
               <b>우리 취향의 교집합</b>

@@ -11,7 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class CatalogService {
     private final CurrentUser current;
     private final TasteTagRepository tags;
-    public CatalogService(CurrentUser current, TasteTagRepository tags) { this.current = current; this.tags = tags; }
+    private final ArtistRepository artists;
+    private final TrackRepository tracks;
+    private final CatalogMapper mapper;
+    public CatalogService(CurrentUser current, TasteTagRepository tags, ArtistRepository artists, TrackRepository tracks, CatalogMapper mapper) {
+        this.current = current; this.tags = tags; this.artists = artists; this.tracks = tracks; this.mapper = mapper;
+    }
+    @Transactional(readOnly = true)
+    public com.tunit.common.api.PageResponse<ArtistSummary> artists(TunitPrincipal principal, String q, int page, int size) {
+        current.read(principal);
+        var bounds = com.tunit.common.api.QueryBounds.page(page, size, org.springframework.data.domain.Sort.by("name", "id"));
+        return com.tunit.common.api.PageResponse.from(artists.findByNameContainingIgnoreCase(com.tunit.common.api.QueryBounds.query(q), bounds).map(mapper::artist));
+    }
+    @Transactional(readOnly = true)
+    public com.tunit.common.api.PageResponse<TrackSummary> tracks(TunitPrincipal principal, String q, int page, int size) {
+        current.read(principal);
+        var bounds = com.tunit.common.api.QueryBounds.page(page, size, org.springframework.data.domain.Sort.by("title", "id"));
+        String term = com.tunit.common.api.QueryBounds.query(q).replace("!", "!!").replace("%", "!%").replace("_", "!_");
+        return com.tunit.common.api.PageResponse.from(tracks.search("%" + term + "%", bounds).map(mapper::track));
+    }
     @Transactional(readOnly = true)
     public List<TagSummary> tags(TunitPrincipal principal, TagType type) {
         current.read(principal);

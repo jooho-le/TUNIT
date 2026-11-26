@@ -15,6 +15,7 @@ export default function Auth() {
     [consent, setConsent] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState<Error | null>(null);
+  const [signupDone, setSignupDone] = useState(false);
   const session = useSession(),
     navigate = useNavigate(),
     [params] = useSearchParams();
@@ -61,6 +62,7 @@ export default function Auth() {
         </button>
       </div>
       {error && <ErrorNotice error={error} />}
+      {signupDone && <p role="status">가입이 완료됐어요. 비밀번호를 다시 입력해 로그인해 주세요.</p>}
       <form
         className="auth-form"
         onSubmit={async (e) => {
@@ -69,8 +71,12 @@ export default function Auth() {
           setBusy(true);
           setError(null);
           try {
-            if (mode === "signup")
+            if (mode === "signup") {
               await api.signup({ email, nickname, password });
+              if (apiMode === "http") {
+                setPassword(""); setMode("login"); setSignupDone(true); return;
+              }
+            }
             await api.login({ email, password });
             setPassword("");
             await session.refresh();
@@ -83,6 +89,7 @@ export default function Auth() {
             );
           } catch (e) {
             setError(e as Error);
+            if (mode === "login" && apiMode === "http") setPassword("");
           } finally {
             setBusy(false);
           }
@@ -95,7 +102,7 @@ export default function Auth() {
               name="nickname"
               autoComplete="nickname"
               value={nickname}
-              maxLength={12}
+              maxLength={100}
               required
               onChange={(e) => setNickname(e.target.value)}
               placeholder="당신을 부를 이름"

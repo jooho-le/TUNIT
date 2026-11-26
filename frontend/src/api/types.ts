@@ -16,6 +16,8 @@ export class ApiError extends Error {
     public status: number,
     message: string,
     public code = "REQUEST_FAILED",
+    public fieldErrors: { field: string; message: string }[] = [],
+    public requestId?: string,
   ) {
     super(message);
     this.name = "ApiError";
@@ -33,6 +35,7 @@ export interface TunitApi {
   profile(): Promise<Profile>;
   saveTaste(taste: Taste): Promise<Profile>;
   deleteTaste(): Promise<void>;
+  updateSettings(settings: { isPublic?: boolean; comparisonConsent?: boolean }): Promise<void>;
   updateNickname(nickname: string): Promise<User>;
   catalog(): Promise<Catalog>;
   addArtist(name: string): Promise<Artist>;
@@ -49,8 +52,9 @@ export interface TunitApi {
   actOnInterest(
     id: string,
     action: "accept" | "reject" | "cancel",
-  ): Promise<Interest>;
+  ): Promise<Pick<Interest, "id" | "status">>;
   connections(): Promise<Connection[]>;
+  disconnect(connectionId: string): Promise<void>;
 }
 export type {
   Artist,

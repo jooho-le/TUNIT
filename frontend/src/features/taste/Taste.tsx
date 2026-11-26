@@ -80,11 +80,11 @@ export default function Taste({ view }: { view: "result" | "my" | "solo" }) {
           <div className="taste-flower">✳</div>
           <p className="micro">YOUR MUSIC PERSONALITY</p>
           <h2>
-            {profile.taste.moods.includes("그루비한")
+            {profile.summary ?? (profile.taste.moods.includes("그루비한")
               ? "도시의 리듬 수집가"
               : profile.taste.moods.includes("차분한")
                 ? "고요한 리스너"
-                : "취향의 탐험가"}
+                : "취향의 탐험가")}
           </h2>
           <p>
             {profile.taste.moods.length
@@ -96,6 +96,7 @@ export default function Taste({ view }: { view: "result" | "my" | "solo" }) {
               <Tag key={g}>{g}</Tag>
             ))}
           </div>
+          {profile.topGenres && profile.topGenres.length > 0 && <p>장르 분포 · {profile.topGenres.slice(0,3).map(g => `${g.name} ${Math.round(g.weight*100)}%`).join(" · ")}</p>}
           <div className="taste-id-bottom">
             <Wordmark />
             <span>
@@ -182,7 +183,7 @@ export default function Taste({ view }: { view: "result" | "my" | "solo" }) {
               disabled={busy}
               onChange={(e) =>
                 void update(() =>
-                  api.saveTaste({ ...profile.taste, public: e.target.checked }),
+                  api.updateSettings({ isPublic: e.target.checked }),
                 )
               }
             />
@@ -199,7 +200,7 @@ export default function Taste({ view }: { view: "result" | "my" | "solo" }) {
               <input
                 name="nickname"
                 value={nickname}
-                maxLength={12}
+                maxLength={100}
                 required
                 onChange={(e) => setNickname(e.target.value)}
               />
@@ -230,7 +231,7 @@ export default function Taste({ view }: { view: "result" | "my" | "solo" }) {
             {confirm && (
               <div className="flow-notice">
                 <p>
-                  선택한 아티스트·곡·무드와 공개 설정이 삭제됩니다. 계정과 관심
+                  선택한 아티스트·곡·장르·무드가 초기화됩니다. 공개·비교 동의 설정과 계정·관심
                   요청 기록은 유지합니다.
                 </p>
                 <div className="action-row">

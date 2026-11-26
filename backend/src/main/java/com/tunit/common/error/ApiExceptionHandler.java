@@ -24,6 +24,7 @@ public class ApiExceptionHandler {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ApiExceptionHandler.class);
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     ResponseEntity<ApiErrorResponse> method(HttpRequestMethodNotSupportedException exception, HttpServletRequest request) {
+        request.setAttribute(com.tunit.common.api.ApiRequestLogFilter.ERROR_CODE,ErrorCode.METHOD_NOT_ALLOWED.name());
         var response = ResponseEntity.status(ErrorCode.METHOD_NOT_ALLOWED.status());
         if (exception.getSupportedMethods() != null) response.header("Allow", String.join(", ", exception.getSupportedMethods()));
         return response.body(ApiErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED, request.getRequestURI()));
@@ -36,6 +37,7 @@ public class ApiExceptionHandler {
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiErrorResponse> validation(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        request.setAttribute(com.tunit.common.api.ApiRequestLogFilter.ERROR_CODE,ErrorCode.INVALID_INPUT.name());
         List<FieldErrorDetail> errors = exception.getBindingResult().getFieldErrors().stream()
             .map(error -> new FieldErrorDetail(error.getField(), error.getDefaultMessage())).toList();
         return ResponseEntity.badRequest().body(ApiErrorResponse.of(ErrorCode.INVALID_INPUT, request.getRequestURI(), errors));
@@ -56,10 +58,18 @@ public class ApiExceptionHandler {
     ResponseEntity<ApiErrorResponse> missing(Exception exception, HttpServletRequest request) { return reply(ErrorCode.RESOURCE_NOT_FOUND, request); }
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     ResponseEntity<ApiErrorResponse> conflict(Exception exception, HttpServletRequest request) { return reply(ErrorCode.CONCURRENT_MODIFICATION, request); }
+    @ExceptionHandler(org.springframework.dao.PessimisticLockingFailureException.class)
+    ResponseEntity<ApiErrorResponse> lockConflict(Exception exception, HttpServletRequest request) { return reply(ErrorCode.CONCURRENT_MODIFICATION, request); }
     @ExceptionHandler(DataAccessResourceFailureException.class)
     ResponseEntity<ApiErrorResponse> unavailable(Exception exception, HttpServletRequest request) { return reply(ErrorCode.SERVICE_UNAVAILABLE, request); }
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiErrorResponse> integrity(Exception exception, HttpServletRequest request) {
+        for (Throwable cause=exception; cause!=null; cause=cause.getCause()) {
+            if (cause instanceof org.hibernate.exception.ConstraintViolationException violation) {
+                if ("uq_pending_interest_pair".equals(violation.getConstraintName())) return reply(ErrorCode.REQUEST_ALREADY_EXISTS,request);
+                if ("uq_connection_pair".equals(violation.getConstraintName())) return reply(ErrorCode.ALREADY_CONNECTED,request);
+            }
+        }
         // A future use-case must translate known UNIQUE/FK violations at its transaction boundary.
         // Do not guess that every constraint failure is a duplicate request (409).
         safeLog(exception, request);
@@ -75,6 +85,7 @@ public class ApiExceptionHandler {
         log.error("API failure method={} path={} exceptionType={}", request.getMethod(), ApiErrorResponse.safePath(request.getRequestURI()), exception.getClass().getSimpleName());
     }
     private ResponseEntity<ApiErrorResponse> reply(ErrorCode code, HttpServletRequest request) {
+        request.setAttribute(com.tunit.common.api.ApiRequestLogFilter.ERROR_CODE,code.name());
         return ResponseEntity.status(code.status()).body(ApiErrorResponse.of(code, request.getRequestURI()));
     }
 }

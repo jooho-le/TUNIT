@@ -4,18 +4,18 @@
 
 ## 전체 구성
 
-React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·PostgreSQL에는 14개 테이블·JPA·공통 오류·세션 인증 기반을 구현하고 임시 DB에서 검증했다. 프론트 연결과 추천·초대·관심 업무 서비스·JCloud 배포는 아직 구현하지 않았다.
+React는 기본 로컬 mock과 같은 출처 Spring HTTP 어댑터를 제공한다. 2026-11-27 기준 Spring·PostgreSQL에 인증/취향 및 검색·분석·추천·초대·관심·연결 해제까지 30개 HTTP 작업을 구현했다. API 계약/DOM과 실제 Spring+임시 DB를 각각 검증했으며 브라우저→HTTP→DB 전체 실행·JCloud 배포는 미검증이다. [Notion 26문서 대조](notion-p0-implementation-review.md)를 기준으로 한다.
 
 | 경로                                 | 책임                                                               |
 | ------------------------------------ | ------------------------------------------------------------------ |
 | `frontend/src/app/`                  | 앱 시작·HashRouter·세션 표시·보호 경로                             |
 | `frontend/src/pages/`                | 로그인 후 Home                                                     |
 | `frontend/src/features/`             | landing·auth·taste·matching·discovery·invitations·interests·social |
-| `frontend/src/api/`                  | 공통 타입·mock·HTTP 어댑터·오류 처리                               |
+| `frontend/src/api/`                  | 공통 뷰 모델·OpenAPI 생성 타입·mock/HTTP·오류 처리                               |
 | `frontend/src/components/`, `hooks/` | 공통 UI·데이터 로딩·스크롤 모션                                    |
 | `frontend/src/styles/`               | 공통 토큰·기능 화면·랜딩 스타일                                    |
-| `backend/`                           | Spring Boot·Entity/Repository·V1·공통 오류·세션 인증·PostgreSQL 검사 |
-| `contracts/`                         | OpenAPI 초안                                                       |
+| `backend/`                           | Spring Boot·14개 Entity/Repository·V1/V2·P0 서비스·세션/CSRF·DB 검사 |
+| `contracts/`                         | 현재 OpenAPI·TypeScript 생성기·초기 계약 보존본                                                       |
 | `deploy/`                            | JCloud 프록시 예시                                                 |
 
 ## 데이터와 요청
@@ -24,9 +24,9 @@ React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·P
 
 기본 모드에는 예시 사용자·요청·연결이 없다. 직접 가입하고 저장한 취향만 비교한다. 예시 카탈로그는 선택 UI용 제목·아티스트·추상 아트이며 음원이나 실제 앨범 이미지를 수집하지 않는다. 저장 키와 체험 방법은 [개발 가이드](development.md)에 모았다.
 
-취향 입력을 바꾸면 이후 조회에서 추천·공개 비교를 다시 계산한다. 다른 탭의 화면을 지속적으로 동기화하는 작업은 없다. 실제 서버에서는 인가·DB 제약·캐시 무효화를 별도로 구현해야 한다.
+취향 입력을 바꾸면 이후 조회에서 추천·공개 비교를 다시 계산한다. 다른 탭의 화면을 지속적으로 동기화하는 작업은 없다. HTTP 모드는 매칭·비교 때 서버가 완료/공개/동의를 재확인한다. 추천 결과를 영속 캐시하지 않는다. 선택용 카탈로그만 어댑터 메모리에 두며 로그인/로그아웃 때 비운다. 목록 로딩은 최초 응답 기준 최대 200페이지로 제한한다.
 
-## 현재 프론트 정책
+## 로컬 디자인 체험 정책
 
 | 항목        | 기준                                          |
 | ----------- | --------------------------------------------- |
@@ -36,7 +36,7 @@ React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·P
 | 기본 유사도 | 아티스트 Jaccard 40% + 곡 30% + 장르·무드 30% |
 | AI          | 호출·임베딩 미구현, 기본 규칙 프로필 사용     |
 
-선택 개수는 기존 UI를 유지한 현재 정책이다. 초대 기한·재요청 등 서버 확정이 필요한 값은 [상태 규칙](state-transitions.md)에 구분했다. 분석 로딩은 UI 연출이며 실제 서버 AI 작업이 아니다.
+선택 개수는 서버에서도 승인됐다. 위 추천식은 기존 mock 체험 기준이다. **Spring은 아티스트30%·곡30%·장르40%** 초기 가설을 사용하고 누락 특징은 재정규화한다. 초대24시간·재신청 허용 등 승인한 서버 정책은 [상태 규칙](state-transitions.md)을 따른다. 분석 로딩은 UI 연출이며 실제 서버 AI 작업이 아니다.
 
 ## 라우팅과 랜딩
 
@@ -48,6 +48,8 @@ React 프론트는 브라우저 로컬 어댑터로 동작한다. Spring Boot·P
 
 ## 백엔드와 배포 경계
 
-백엔드는 Java 21·Spring Boot 4.1.2·Gradle Wrapper 9.5.1이다. 14개 Entity/Repository와 V1, 공통 페이지·오류 DTO, 세션/CSRF·회원가입·본인 취향 CRUD·공개/비교 동의 설정·활성 태그를 제공한다. Controller/Service/Repository를 분리하고 본인 취향 쓰기는 사용자 행 잠금과 단일 트랜잭션을 사용한다. Hibernate는 validate, DDL은 Flyway가 담당한다. 통합 검사는 실제 PostgreSQL 16에서 실행했다.
+백엔드는 Java21·Spring Boot4.1.2·Gradle9.5.1, PostgreSQL16이다. DDL은 Flyway V1/V2, Hibernate는 validate다. 취향 쓰기는 사용자 행 잠금, 관심/연결/초대 쓰기는 정렬한 사용자 쌍 잠금 후 업무 행 잠금을 사용한다. 수락 상태와 연결 INSERT는 같은 트랜잭션이며 실제 DB 오류로 롤백을 검사했다. 조회는 DTO를 반환하고 DB를 변경하지 않는다.
 
-기존 프론트의 ID·목록·취향 저장·초대 상태는 최신 Notion과 달라 자동 호환되지 않는다. [추가 API 검토](backend-api-gap-review.md)에 사용자가 확정한 가입/취향 완료 기준과 남은 차이를 기록했다. 초대 기한·추천 가중치는 미확정이다. [백엔드 안내](../backend/README.md)·[배포 안내](../deploy/README.md)를 참고한다. 임시 DB는 종료·삭제했으며 운영 DB·JCloud 연동은 미검증이다.
+등록 DB만 검색하고 개인 장르는 선택/아티스트/곡 출처별 정규화로 계산한다. 추천·발견은 현재 소규모 등록 데이터를 메모리에서 계산하므로 대규모 부하·N+1 최적화는 후속이다. 외부 링크는 검토한 HTTPS 호스트 허용 목록만 반환하며 기본은 null이다. 외부 공급자 호출·AI·시드 데이터·백그라운드 동기화가 없다.
+
+현재 HTTP 어댑터는 UUID/페이지/취향 세 배열/설정 PATCH 및 초대 complete 계약에 맞춰 변환한다. 실제 개발 DB와 카탈로그 준비, 브라우저 쿠키·HTTPS·Nginx/JCloud 전체 동작은 별도 검증이 필요하다. [백엔드 안내](../backend/README.md)·[배포 안내](../deploy/README.md)를 참고한다. 이번 임시 테스트 DB는 종료·삭제했고 상시 서버는 시작하지 않았다.

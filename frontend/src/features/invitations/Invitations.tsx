@@ -145,7 +145,7 @@ export function InvitationStatus() {
   if (resource.error)
     return <ErrorNotice error={resource.error} retry={resource.reload} />;
   const invite = resource.data!,
-    mine = session.user?.id === invite.inviterId;
+    mine = invite.viewerRole ? invite.viewerRole === "INVITER" : session.user?.id === invite.inviterId;
   const next = `/invite/${token}`;
   return (
     <>
@@ -153,7 +153,7 @@ export function InvitationStatus() {
         id="S25"
         label="INVITATION / WAITING FOR YOUR FRIEND"
         title={
-          invite.status === "EXPIRED" ? (
+          invite.status === "EXPIRED" || invite.status === "UNAVAILABLE" ? (
             <>잠시 지나간 초대.</>
           ) : invite.status === "READY" ? (
             <>
@@ -163,7 +163,7 @@ export function InvitationStatus() {
             </>
           ) : (
             <>
-              {invite.inviterName}님이
+              {invite.inviterName ? `${invite.inviterName}님이` : "친구가"}
               <br />
               취향을 건넸어요.
             </>
@@ -184,11 +184,12 @@ export function InvitationStatus() {
               NEEDS_CONSENT: "양쪽 공개·동의 필요",
               READY: "비교 준비 완료",
               EXPIRED: "만료된 초대",
+              UNAVAILABLE: "사용할 수 없는 초대",
             }[invite.status]
           }
         </span>
         {error && <ErrorNotice error={error} />}{" "}
-        {invite.status === "EXPIRED" ? (
+        {invite.status === "EXPIRED" || invite.status === "UNAVAILABLE" ? (
           <Link className="button" to="/invite">
             새 초대 만들기
             <Icon name="arrow" />
@@ -230,7 +231,7 @@ export function InvitationStatus() {
                 onChange={(e) => setConsent(e.target.checked)}
               />
               <span>
-                내 공개 취향을 {invite.inviterName}님과 비교하는 데 동의해요.
+                내 공개 취향을 {invite.inviterName ? `${invite.inviterName}님` : "초대한 친구"}과 비교하는 데 동의해요.
               </span>
             </label>
             {!session.profile.taste.public && (

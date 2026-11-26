@@ -78,10 +78,14 @@ export function createHttpClient(
                 ? "이미 처리되었거나 중복된 요청입니다. 목록을 새로고침해 주세요."
                 : "요청을 처리하지 못했습니다.",
         body.code,
+        Array.isArray(body.fieldErrors) ? body.fieldErrors.filter((error: unknown): error is { field: string; message: string } =>
+          typeof error === "object" && error !== null && "field" in error && typeof error.field === "string" && "message" in error && typeof error.message === "string") : [],
+        response.headers.get("X-Request-Id") ?? undefined,
       );
     }
     if (response.status === 204) return undefined as T;
-    return response.json();
+    try { return await response.json(); }
+    catch { throw new ApiError(502, "서버 응답을 확인하지 못했습니다. 현재 상태를 다시 조회해 주세요.", "INVALID_RESPONSE"); }
   }
   return {
     request,

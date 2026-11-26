@@ -1,7 +1,7 @@
 import { Art, Icon } from "./ui";
 import type { Track } from "../types";
 export const musicUrl = (track: Track) =>
-  `https://www.youtube.com/results?search_query=${encodeURIComponent(`${track.artist} ${track.title} official`)}`;
+  track.externalUrl === undefined ? `https://www.youtube.com/results?search_query=${encodeURIComponent(`${track.artist} ${track.title} official`)}` : track.externalUrl;
 export function SongRow({
   track,
   index = 0,
@@ -24,6 +24,7 @@ export function SongRow({
       <span className="track-info">
         <strong>{track.title}</strong>
         <span>{track.artist}</span>
+        {!!track.commonArtistGenres?.length && <span>공통 장르 · {track.commonArtistGenres.join(" · ")}</span>}
       </span>
       <span className="track-time">{track.length}</span>
       <span className="track-action">
@@ -45,17 +46,17 @@ export function SongRow({
         >
           {body}
         </button>
-      ) : (
+      ) : musicUrl(track) ? (
         <a
           className="track-row"
-          href={musicUrl(track)}
+          href={musicUrl(track)!}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${track.title} 외부 음악 검색`}
         >
           {body}
         </a>
-      )}
+      ) : <div className="track-row" aria-label={`${track.title} 외부 링크 없음`}>{body}</div>}
       {children}
     </div>
   );

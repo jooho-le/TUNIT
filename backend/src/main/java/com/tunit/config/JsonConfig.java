@@ -11,7 +11,7 @@ import tools.jackson.databind.type.LogicalType;
 public class JsonConfig {
     @Bean
     JsonMapperBuilderCustomizer strictStringInputs() {
-        return builder -> builder.withCoercionConfig(LogicalType.Textual, config -> config
+        return builder -> builder.enable(tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).withCoercionConfig(LogicalType.Textual, config -> config
             .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
             .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
             .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail));

@@ -57,9 +57,9 @@ npm run dev
 
 다른 기기·시크릿 창·브라우저·포트는 저장소를 공유하지 않는다. 로컬 초대가 다른 기기에서 동작하는 것으로 검증하지 않는다. 외부 듣기는 음악 검색을 새 탭으로 열며 앱 안에서 음원을 재생하지 않는다.
 
-## 환경변수와 향후 HTTP 모드
+## 환경변수와 Spring HTTP 모드
 
-예시는 [frontend/.env.example](../frontend/.env.example)에 있다. 실제 Spring API가 준비되면 개인 `frontend/.env.local`에 다음 공개값을 설정한다.
+예시는 [frontend/.env.example](../frontend/.env.example)에 있다. Spring P0 API와 어댑터가 구현됐다. 사용자가 별도 DB/카탈로그를 준비한 뒤 개인 `frontend/.env.local`에 다음 공개값을 설정한다.
 
 ```dotenv
 VITE_API_MODE=http
@@ -69,7 +69,9 @@ VITE_APP_NAME=TUNIT
 
 `VITE_` 값은 브라우저에서 보이므로 키·DB 비밀번호를 넣지 않는다. 실제 `.env*`는 Git에서 제외하고 `.env.example`만 공유한다.
 
-로컬 `/api` 프록시는 `127.0.0.1:8080`을 향한다. 미래 운영 환경도 같은 출처 `/api`를 Spring으로 전달하는 구성을 전제로 한다. HTTP 실패를 mock 성공으로 바꾸지 않으며 서버가 없으면 연결 오류를 표시한다. 세션·CSRF 요청 규격은 [API 계약](api-spec.md)에 있다.
+로컬 `/api` 프록시는 `127.0.0.1:8080`을 향한다. 운영 환경도 같은 출처 `/api`를 Spring으로 전달하는 구성을 전제로 한다. HTTP 실패를 mock 성공으로 바꾸지 않으며 서버가 없으면 연결 오류를 표시한다. 세션·CSRF 요청 규격은 [API 계약](api-spec.md)에 있다.
+
+HTTP 모드는 가입 후 별도 로그인하고, 사용자 음악 직접 추가·관심 한마디를 제공하지 않는다. DB에 음악/태그가 없으면 실제 빈 목록을 표시한다. 공급자·시드·데모 계정을 자동 생성하지 않는다. 기본 mock 설정과 실제 환경 파일은 이번 작업에서 바꾸지 않았다. 서버 실행과 개발 DB 반영은 사용자가 선택해 수행한다.
 
 ## 보존과 복구 범위
 

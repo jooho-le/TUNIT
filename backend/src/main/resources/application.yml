@@ -26,6 +26,9 @@ server:
         secure: ${SESSION_COOKIE_SECURE:true}
 app:
   public-url: ${APP_PUBLIC_URL:http://localhost:5173}
+  catalog:
+    external-hosts: ${CATALOG_EXTERNAL_HOSTS:}
+    artwork-hosts: ${CATALOG_ARTWORK_HOSTS:}
   ai:
     embedding-enabled: ${AI_EMBEDDING_ENABLED:false}
   # Reserved for later integrations; no AI or external service is enabled here.

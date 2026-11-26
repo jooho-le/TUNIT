@@ -2,7 +2,7 @@
 
 [설계 비교](backend-design-review.md) · [백엔드 안내](../backend/README.md) · [V1 SQL](../backend/src/main/resources/db/migration/V1__initial_schema.sql)
 
-2026-11-19 기준 [Notion 필드 정의](https://app.notion.com/p/bc6d062130a98224984081f41d45a5a4) 15절 V1을 임시 PostgreSQL 16에 적용하고 14개 테이블·Entity/Repository와 Hibernate validate를 확인했다. 운영/개발 DB에 상시 적용한 상태는 아니다.
+2026-11-27 기준 [Notion 필드 정의](https://app.notion.com/p/bc6d062130a98224984081f41d45a5a4) 15절 V1을 임시 PostgreSQL 16에 적용하고 14개 테이블·Entity/Repository와 Hibernate validate를 확인했다. V2의 같은/역방향 PENDING 부분 UNIQUE도 적용·검증했다. 업무 테이블은 여전히 14개이며 운영/개발 DB에 상시 적용한 상태는 아니다.
 
 | 테이블 | PK·관계와 주요 제약 |
 | --- | --- |
@@ -25,10 +25,10 @@
 
 ## 보류한 무결성과 정책
 
-- PENDING 중복·역방향·거절 후 재신청 정책이 미확정이므로 부분 UNIQUE 인덱스는 보류했다.
+- [V2](../backend/src/main/resources/db/migration/V2__pending_interest_pair.sql)는 LEAST/GREATEST 사용자 쌍에 WHERE status=PENDING 부분 UNIQUE를 추가한다. 기존 중복 행을 자동 삭제하지 않으며 있으면 적용이 실패한다. 거절/취소/연결 해제 후 새 요청은 허용한다.
 - GENRE 조인 생성자는 MOOD를 거부하지만 일반 FK는 참조 태그의 type을 검사하지 못한다. DB 직접 입력이 가능함을 실제로 확인했다.
-- connections FK만으로 요청 ACCEPTED와 참여자 쌍 일치를 강제하지 못한다. 수락 서비스의 동일 트랜잭션 검증이 필요하다.
-- 취향 완료 수는 이번 사용자 확인에 따라 5명·10곡·GENRE/MOOD 각각 1~3개다. 초대 기간·카탈로그 권한·탈퇴 보존 정책은 미확정이다. [추가 검토](backend-api-gap-review.md)를 따른다.
+- connections FK만으로 요청 ACCEPTED와 참여자 쌍 일치를 강제하지 못한다. 구현한 수락 서비스의 동일 트랜잭션·쌍 잠금으로 보장하며 외부 SQL 직접 입력까지 강제하지는 않는다.
+- 취향 완료 수는 이번 사용자 확인에 따라 5명·10곡·GENRE/MOOD 각각 1~3개다. 초대24시간·인증된 DB 검색·초기 추천식을 반영했다. 탈퇴/보존·P1 초대 철회·GENRE 복합 FK는 보류한다. [최신 대조](notion-p0-implementation-review.md)를 따른다.
 - users.visibility, match_snapshots, 관심 note 등 과거 프론트 초안의 필드/테이블은 추가하지 않았다.
 
 현재 검사 결과를 전체 업무 무결성 완성으로 표시하지 않는다. [검증 기록](test-results.md)을 함께 확인한다.

@@ -35,5 +35,10 @@ public class InterestRequest extends UuidEntity {
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
     public Instant getResolvedAt() { return resolvedAt; }
+    public void resolve(InterestStatus target, Instant now) {
+        if (status != InterestStatus.PENDING || target == InterestStatus.PENDING)
+            throw new com.tunit.common.error.BusinessException(com.tunit.common.error.ErrorCode.INVALID_STATE);
+        status = Objects.requireNonNull(target); updatedAt = resolvedAt = Objects.requireNonNull(now);
+    }
 
 }
