@@ -22,6 +22,24 @@ npm run dev
 
 접속 주소는 Vite 출력으로 확인한다. 브라우저 루트는 `/#/landing`으로 이어지고, `/#/home`은 로그인·취향 완료가 필요하다.
 
+## 번호 사본 재발 검사
+
+같은 폴더에 Git이 관리하는 원본과 `Controller 2.java`·`V1__schema 2.sql` 같은 번호 사본이 생기면 아래 명령으로 확인한다. 파일 내용/해시는 읽지 않고 이름과 원본 존재 여부만 검사한다. 파일을 삭제·이동·수정하거나 Git에 추가하지 않는다.
+
+```sh
+npm run check:copies
+npm run check:copies -- --json
+npm run test:copies
+```
+
+검사 종료 코드는 정상0·사본 후보 발견1·Git/폴더 조회 오류2다. 번호 없는 원본이 Git에 등록돼 있고 실제로 존재하는 소스/설정/문서 파일을 대상으로 한다. `Scene2.tsx`나 원본이 없는 번호 파일·이미지 변형 파일을 일괄 금지하지 않는다. node_modules/build/.preview를 전체 탐색하지 않는다.
+
+프론트 `dev`·`test`·`build`의 npm 사전 단계에서 자동 실행한다. 루트 명령과 frontend 폴더에서 직접 실행하는 명령 모두 해당한다. 사본이 남아 있으면 Vite/Vitest/TypeScript 실행 전에 멈춰 경로를 알려준다. 초기163개 사본은 사용자 승인 후 .preview/numbered-copies-2026-11-27-mkthkxfm의 files/로 분리했다. 원본 경로/대응 파일/이전 비교 결과는 같은 폴더의 manifest.json·prior-comparison.json에 보존한다. 백업은 기존 .preview/ 제외 규칙으로 Git에 포함하지 않는다. 정리 후 검사0/개발 테스트·빌드가 통과했으며, 재발하면 다시 종료1로 중단한다. 전체를 무작정 삭제하거나 `.gitignore`로 감추지 말고 내용 비교/백업 후 정리한다. 검사기는 무시된 소스 사본도 찾는다.
+
+GitHub Actions는 검사기 자체 테스트와 기존 npm test/build를 통해 이를 검사한다. 로컬 Git 훅·상시 감시·자동 삭제·동기화·개발 서버를 설치/실행하지 않는다. Git GUI 커밋 자체를 차단하는 훅은 아니므로 커밋 전에도 `npm run check:copies`를 실행한다. 백엔드만 직접 실행할 때도 저장소 루트에서 이 명령을 먼저 사용할 수 있다. Gradle 실행에 Node 의존성을 강제로 추가하지 않았다.
+
+사본을 생성한 프로그램 자체는 확인되지 않았다. 바탕화면에서 파일 동기화 관리 메타데이터가 확인됐지만 특정 서비스가 원인이라는 증거는 아니다. [Apple의 Desktop/Documents 동기화 안내](https://support.apple.com/en-us/109344)처럼 바탕화면 동기화를 사용하는 환경이라면 추후 동기화 범위/작업 경로를 검토할 수 있다. 이번에는 사용자 선택에 따라 프로젝트 위치와 계정/동기화 설정을 유지한다.
+
 ## 로그인해서 화면 확인
 
 1. VS Code 터미널에서 프로젝트 루트로 이동한 뒤 `npm run dev`를 실행한다.

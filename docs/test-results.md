@@ -2,6 +2,24 @@
 
 [문서 안내](README.md) · [화면 지도](screens.md) · [작업 기록](work-log/README.md)
 
+## 번호 사본 분리 후 전체 재검증 — 2026-11-27
+
+이름에 ` 2`가 붙은 미추적 사본163개를 .preview/의 복구 가능한 백업에 분리한 뒤 실제 실행했다. 이전 감지 단계의 차단 결과와 구분한다.
+
+| 검사 | 결과 |
+| --- | --- |
+| npm run check:copies | **PASS, 후보0개** |
+| npm run test:copies | **7 PASS** |
+| npm test | **71 PASS**, 11파일 |
+| npm run build | **PASS**, TypeScript/Vite |
+| node frontend/design/generate.mjs | **3 PASS**, 49상태, 기존 HTML/목록 해시 동일 |
+| Gradle clean 후 backend/scripts/test-postgres.sh | **72 PASS / FAIL0 / ERROR0 / SKIP0**, bootJar PASS |
+| OpenAPI 생성 타입 검사 | **PASS** |
+
+백엔드는 새 SCRAM 임시 PostgreSQL에 V1/V2·14개 테이블을 적용해 검사한 뒤 종료/삭제했다. clean으로 이전 생성물의 사본/중복 XML도 제거했으며 새8개 JUnit suite만 집계했다. 원본 소스·디자인·다른 내용/미확인 사본은 보존했다. 상시 프론트/Spring 서버·실제 개발 DB·JCloud는 실행하지 않았다.
+
+백업·커밋·frontend 준비 범위는 [작업 기록](work-log/2026-11-27-copy-cleanup-frontend-ready.md)에 있다. 사본 생성 프로그램은 미확정이며 실행 전 감지는 파일 생성 자체를 차단하지 않는다.
+
 ## 스플래시·P0 충돌 해결 재검증 — 2026-11-27
 
 PR [#4](https://github.com/jooho-le/TUNIT/pull/4)의 frontend와 dev를 통합한 후보 코드에서 실행했다. 기존 스플래시4컷/3000ms·앱 시작 연결과 최신 세션/HTTP 어댑터/관심·연결 해제를 함께 유지한다.
