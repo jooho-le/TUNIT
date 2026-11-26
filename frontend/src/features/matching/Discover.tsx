@@ -97,7 +97,7 @@ export function Discover() {
               <span className="portrait-letter">
                 {m.user.nickname.slice(0, 1)}
               </span>
-              <span className="match-chip">{m.score}% TASTE</span>
+              <span className="match-chip">{m.score === null ? "정보 부족" : `${m.score}% TASTE`}</span>
               <span className="person-open">
                 <Icon name="arrow" />
               </span>

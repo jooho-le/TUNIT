@@ -41,6 +41,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setUser(null);
         setProfile(null);
       }
+      throw e;
     } finally {
       setReady(true);
     }
@@ -51,7 +52,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   }, []);
   useEffect(() => {
-    void refresh();
+    void refresh().catch(() => {});
   }, [refresh]);
   useEffect(() => {
     const clear = () => {

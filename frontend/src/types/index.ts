@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  email: string;
+  email?: string;
   nickname: string;
 }
 export interface Artist {
@@ -10,6 +10,8 @@ export interface Artist {
   art: string;
 }
 export interface Track {
+  commonArtistGenres?: string[];
+  externalUrl?: string | null;
   id: string;
   title: string;
   artist: string;
@@ -24,6 +26,8 @@ export interface Taste {
   public: boolean;
 }
 export interface Profile {
+  summary?: string | null;
+  topGenres?: { tagId: string; name: string; weight: number }[];
   user: User;
   taste: Taste;
   complete: boolean;
@@ -31,7 +35,7 @@ export interface Profile {
 }
 export interface Match {
   user: Pick<User, "id" | "nickname">;
-  score: number;
+  score: number | null;
   commonArtists: Artist[];
   commonTracks: Track[];
   newTracks: Track[];
@@ -55,7 +59,7 @@ export interface Connection {
   id: string;
   userA: string;
   userB: string;
-  requestId: string;
+  requestId?: string;
   partner: Pick<User, "id" | "nickname">;
 }
 export type InvitationStatus =
@@ -63,18 +67,23 @@ export type InvitationStatus =
   | "NEEDS_PROFILE"
   | "NEEDS_CONSENT"
   | "READY"
+  | "UNAVAILABLE"
   | "EXPIRED";
 export interface Invitation {
+  viewerRole?: "INVITER" | "RECIPIENT" | "VISITOR" | "ANONYMOUS";
+  invitationUrl?: string;
   token: string;
-  inviterId: string;
-  inviterName: string;
+  inviterId?: string;
+  inviterName?: string;
   recipientId: string | null;
-  inviterConsent: boolean;
-  recipientConsent: boolean;
+  inviterConsent?: boolean;
+  recipientConsent?: boolean;
   expiresAt: string;
   status: InvitationStatus;
 }
 export interface Catalog {
+  genres?: string[];
+  moods?: string[];
   artists: Artist[];
   tracks: Track[];
 }

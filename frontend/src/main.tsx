@@ -5,6 +5,7 @@ import "./styles/global.css";
 import "./styles/flows.css";
 import "./styles/editorial.css";
 import "./styles/landing.css";
+import "./styles/readability.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

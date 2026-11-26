@@ -1,0 +1,287 @@
+/* Larger, clearer product UI on TUNIT's existing editorial foundation. */
+:root {
+  --surface: #252525;
+  --muted: #d0cec7;
+  --panel-purple: #a66bff18;
+  --panel-yellow: #fff21a12;
+  --editorial-header-height: 84px;
+  --reel-height: 100px;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.freshman-shell { --page-gutter: clamp(20px, 4vw, 76px); }
+.freshman-shell .application-canvas { padding-top: calc(var(--editorial-header-height) + var(--banner-height, 0px) + 44px); }
+.freshman-shell .application-canvas :is(h1, h2, h3, strong, b) { font-weight: 500; }
+.freshman-shell :is(.eyebrow, .micro, .index-label) { font-size: 13px; line-height: 1.6; }
+.freshman-shell .page-greeting { margin-bottom: 32px; padding-bottom: 28px; }
+.freshman-shell .page-greeting .eyebrow { font-size: 14px; letter-spacing: .025em; }
+.freshman-shell .page-greeting h1 { font-size: clamp(36px, 4.2vw, 64px); line-height: 1.25; letter-spacing: -.05em; margin: 18px 0; }
+.freshman-shell .page-greeting > p:last-child { font-size: 18px; line-height: 1.75; max-width: 58ch; }
+.freshman-shell :is(.section-head h2, .taste-song-section h2, .taste-details h2, .taste-settings h2) { font-size: clamp(26px, 2.5vw, 36px); }
+.freshman-shell :is(.sample-note, .auth-notice, .roadmap-link) { font-size: 14px; line-height: 1.8; }
+.freshman-shell .page-footer { font-size: 12px; line-height: 1.8; gap: 20px; }
+.demo-banner { font-size: 12px; line-height: 18px; padding: 5px 4vw; color: var(--muted); }
+
+/* Actions have visible surfaces before hover, and remain comfortably clickable. */
+.freshman-shell .button, .landing-page .landing-action {
+  min-height: 56px; padding: 16px 26px; gap: 28px;
+  background: var(--yellow); border: 1px solid var(--yellow);
+  color: var(--canvas); font-size: 17px; font-weight: 500; line-height: 1.4;
+  text-transform: none; border-radius: 0;
+}
+.freshman-shell .button:hover:not(:disabled), .landing-page .landing-action:hover {
+  background: var(--yellow); border-color: var(--yellow); color: var(--canvas); filter: brightness(1.08);
+}
+.landing-page .landing-action > svg { color: currentColor; }
+.freshman-shell .button.secondary { background: var(--panel-purple); color: var(--text); border-color: var(--purple); }
+.freshman-shell .button.secondary:hover:not(:disabled) { background: var(--purple); color: var(--canvas); border-color: var(--purple); }
+.freshman-shell button:disabled { opacity: .55; }
+.freshman-shell .text-link { min-height: 44px; font-size: 16px; line-height: 1.6; font-weight: 500; }
+.freshman-shell :is(.tag, .status-pill, .phase-tag) { font-size: 14px; padding: 7px 12px; line-height: 1.5; background: var(--panel-purple); }
+.freshman-shell .tag-row { gap: 10px; }
+.freshman-shell .status-pill { color: var(--canvas); background: var(--purple); border-color: var(--purple); }
+.freshman-shell .status-pill:is(.accepted, .ready) { background: var(--yellow); border-color: var(--yellow); }
+.freshman-shell .status-pill:is(.rejected, .cancelled, .expired) { background: var(--surface); color: var(--muted); border-color: var(--border); }
+
+/* Navigation uses Korean task names; the reel keeps the editorial identity. */
+.editorial-glyph { font-size: 48px; white-space: nowrap; }
+.editorial-edition { font-size: 13px; }
+.editorial-edition > span { font-size: 11px; }
+.editorial-header-actions { gap: 24px; font-size: 16px; }
+.editorial-quick-nav { display: flex; gap: 24px; align-items: center; }
+.editorial-quick-nav a { padding: 12px 0; white-space: nowrap; }
+.editorial-quick-nav a[aria-current="page"] { color: var(--yellow); box-shadow: 0 2px var(--yellow); }
+.editorial-header-actions > .editorial-start { background: var(--yellow); color: var(--canvas); padding: 11px 18px; }
+.editorial-menu-trigger { font-size: 16px; min-height: 48px; padding: 12px 0 12px 12px; }
+.editorial-menu-top { font-size: 16px; }
+.editorial-menu-top > button { font-size: 16px; }
+.editorial-menu-index { font-size: 16px; }
+.editorial-menu-name { font-family: inherit; font-style: normal; font-size: clamp(30px, 4vw, 64px); font-weight: 500; line-height: 1.35; }
+.editorial-menu-caption { font-family: var(--display-font); font-style: italic; font-size: clamp(22px, 2.5vw, 38px); }
+.editorial-menu-bottom { font-size: 14px; }
+.editorial-reel-edition { flex-basis: 155px; font-size: 12px; }
+.editorial-reel-edition > span:last-child { font-size: 11px; }
+.editorial-reel-copy { gap: 4px; }
+.editorial-reel-copy > strong { font-size: 17px; font-weight: 500; }
+.editorial-reel-copy small { font-size: 12px; }
+.editorial-reel-copy > span { font-size: 12px; }
+.editorial-reel-items > a { padding: 16px; gap: 12px; border-top: 3px solid transparent; }
+.editorial-reel-items > a:is(.active, [aria-current="location"]) { background: var(--panel-yellow); border-top-color: var(--yellow); }
+.editorial-reel-note { font-size: 14px; }
+
+/* Core journeys appear first, as two unmistakable choices. */
+.freshman-shell .journey-grid { margin: 0 0 32px; gap: 24px; }
+.freshman-shell .journey-card {
+  padding: 32px; min-height: 300px; gap: 18px;
+  background: var(--yellow); color: var(--canvas); border: 1px solid var(--yellow);
+}
+.freshman-shell .journey-card.purple-card { background: var(--purple); border-color: var(--purple); }
+.freshman-shell .journey-card:hover { background: var(--yellow); border-color: var(--yellow); }
+.freshman-shell .journey-card.purple-card:hover { background: var(--purple); border-color: var(--purple); }
+.freshman-shell .journey-card:hover > strong svg { translate: 4px 0; }
+.freshman-shell .journey-card :is(p, span, svg) { color: inherit; }
+.freshman-shell .journey-card > span { font-size: 14px; }
+.freshman-shell .journey-card h2 { font-size: clamp(28px, 2.6vw, 38px); line-height: 1.3; letter-spacing: -.045em; }
+.freshman-shell .journey-card > p { font-size: 17px; max-width: 38ch; line-height: 1.7; }
+.freshman-shell .journey-card > strong { margin-top: auto; padding-top: 16px; border-top: 1px solid #17171755; font-size: 18px; }
+.freshman-shell .home-dashboard { grid-template-columns: 1.4fr 1fr; gap: 24px; border: 0; padding: 0; }
+.freshman-shell :is(.dashboard-feature, .dashboard-taste) { padding: 28px; background: var(--surface); border: 1px solid var(--border); min-height: 280px; }
+.freshman-shell .dashboard-feature-copy h2 { font-size: clamp(28px, 2.5vw, 36px); }
+.freshman-shell .dashboard-feature-copy > p { font-size: 17px; }
+.freshman-shell .dashboard-feature-copy > p.eyebrow { font-size: 14px; color: var(--purple); }
+.freshman-shell .dashboard-taste h2 { font-size: 30px; }
+.freshman-shell .home-shortcuts { gap: 20px; border: 0; margin-top: 28px; }
+.freshman-shell .home-shortcuts > a { border: 1px solid var(--border); background: var(--surface); padding: 22px; }
+.freshman-shell .home-shortcuts strong { font-size: 18px; }
+.freshman-shell .home-shortcuts small { font-size: 15px; }
+
+/* Forms, choices and songs use the same readable hierarchy on every route. */
+.freshman-shell .auth-page { max-width: 680px; }
+.freshman-shell .auth-form { max-width: none; gap: 24px; }
+.freshman-shell :is(.auth-form > label, .inline-form > label, .interest-compose form > label, .consent) { font-size: 16px; color: var(--text); line-height: 1.7; }
+.freshman-shell :is(.search-field, .auth-form input:not([type="checkbox"]), .inline-form input, .share-link input, .interest-compose textarea) {
+  font-size: 17px; background: var(--surface); border: 1px solid #f5f4ee60; padding: 14px 16px; min-height: 56px; line-height: 1.5;
+}
+.freshman-shell .search-field { padding: 0 16px; gap: 12px; }
+.freshman-shell .search-field input { font-size: 17px; padding: 16px 0; min-width: 0; }
+.freshman-shell input::placeholder, .freshman-shell textarea::placeholder { color: #b7b5ad; opacity: 1; }
+.freshman-shell :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--yellow); width: 20px; height: 20px; flex-shrink: 0; }
+.freshman-shell .segmented { padding: 4px; gap: 4px; border: 1px solid var(--border); background: var(--surface); }
+.freshman-shell .segmented > :is(button, a) { font-size: 17px; min-height: 48px; padding: 12px 24px; margin: 0; }
+.freshman-shell .segmented > :is([aria-pressed="true"], [aria-current="page"]) { background: var(--yellow); color: var(--canvas); border-color: var(--yellow); }
+.freshman-shell .step-progress { font-size: 16px; }
+.freshman-shell .step-progress small { font-size: 14px; }
+.freshman-shell .artist-card { border: 2px solid transparent; padding: 12px; }
+.freshman-shell .artist-card.selected { background: var(--panel-yellow); border-color: var(--yellow); }
+.freshman-shell .artist-card.selected .artist-art { outline: none; }
+.freshman-shell .artist-card > strong { font-size: 18px; }
+.freshman-shell .artist-card > span { font-size: 15px; line-height: 1.5; }
+.freshman-shell .choice-chips > button { font-size: 17px; min-height: 52px; padding: 14px 22px; background: var(--surface); }
+.freshman-shell .choice-chips > button.selected { background: var(--purple); color: var(--canvas); border-color: var(--purple); }
+.freshman-shell .mood-chips > button.selected { background: var(--yellow); color: var(--canvas); border-color: var(--yellow); }
+.freshman-shell .track-row { padding: 18px 14px; gap: 18px; min-height: 88px; border-left: 3px solid transparent; }
+.freshman-shell .track-row:hover { background: var(--surface); }
+.freshman-shell .track-row.selected { background: var(--panel-yellow); border-left-color: var(--yellow); }
+.freshman-shell .track-info > strong { font-size: 18px; line-height: 1.5; }
+.freshman-shell .track-info > span { font-size: 15px; }
+.freshman-shell :is(.track-index, .track-time, .track-action) { font-size: 14px; }
+.freshman-shell .selection-footer { border-top: 2px solid var(--yellow); gap: 16px; }
+.freshman-shell .selection-footer :is(span, small) { font-size: 15px; }
+.freshman-shell .selection-footer strong { font-size: 20px; }
+.freshman-shell .privacy-option { padding: 24px; background: var(--surface); border: 1px solid var(--border); }
+.freshman-shell .privacy-option strong { font-size: 18px; }
+.freshman-shell .privacy-option small { font-size: 15px; line-height: 1.75; }
+.freshman-shell :is(.custom-entry, .music-help, .invite-steps, .share-link > label, .share-link > p, .recipient-preview p:not(.eyebrow), .invitation-status > p, .comparison-reason) { font-size: 16px; line-height: 1.8; }
+.freshman-shell :is(.custom-entry > summary, .auth-notice > summary) { min-height: 44px; padding: 10px 0; cursor: pointer; }
+.freshman-shell :is(.composer-count, .interest-compose form > label > span, .share-card > p, .flow-notice label, .resource-loading > p) { font-size: 15px; }
+.freshman-shell .danger-zone .button { background: transparent; border-color: var(--muted); color: var(--text); }
+
+/* Filled visual anchors replace the nearly invisible, all-outline surfaces. */
+.freshman-shell .cover > i { opacity: .85; }
+.freshman-shell .cover > b { opacity: .8; }
+.freshman-shell .person-meta { padding: 24px 18px; background: var(--surface); }
+.freshman-shell .person-meta h3 { font-size: 26px; }
+.freshman-shell .person-meta p { font-size: 16px; }
+.freshman-shell :is(.match-chip, .person-open) { background: var(--yellow); color: var(--canvas); border-color: var(--yellow); font-size: 15px; }
+.freshman-shell .taste-id { background: var(--purple); color: var(--canvas); --text: #171717; --muted: #171717; --border: #17171755; }
+.freshman-shell .taste-id .eyebrow { color: var(--canvas); }
+.freshman-shell .taste-flower { color: var(--yellow); }
+.freshman-shell .taste-id h2 { font-size: clamp(32px, 3vw, 46px); }
+.freshman-shell .taste-stats span { font-size: 16px; }
+.freshman-shell .venn-circle.left { background: #fff21a20; border-width: 2px; }
+.freshman-shell .venn-circle.right { background: #a66bff30; border-width: 2px; }
+.freshman-shell .venn-center { border: 1px solid var(--border); padding: 18px; }
+.freshman-shell :is(.flow-notice, .request-card, .connection-card, .share-card) { background: var(--surface); border: 1px solid var(--border); padding: 28px; }
+.freshman-shell .flow-notice { border-left: 4px solid var(--purple); }
+.freshman-shell :is(.flow-notice strong, .request-person strong, .request-person a) { font-size: 20px; }
+.freshman-shell :is(.flow-notice p, .flow-empty p, .intro > p:not(.eyebrow), .analyzing > p:not(.eyebrow), .request-note) { font-size: 17px; line-height: 1.8; }
+.freshman-shell :is(.request-person small, .invitation-meta, .request-final, .connection-card p, .interest-compose .micro) { font-size: 15px; }
+.freshman-shell :is(.request-avatar, .connection-symbol) { color: var(--yellow); }
+.freshman-shell .share-card { border-color: var(--purple); background: var(--panel-purple); }
+
+/* The opening scene explains the product, with the original yellow headset. */
+.landing-hero {
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
+  grid-template-areas: "eyebrow eyebrow" "brand object" "copy object" "actions actions";
+  gap: 12px 32px; padding-bottom: 24px;
+}
+.landing-hero-topline { grid-area: eyebrow; font-size: 13px; }
+.landing-wordmark-stage { grid-area: brand; justify-content: flex-start; padding: 32px 0 12px; }
+.landing-wordmark-stage h1 { font-size: clamp(140px, 21vw, 420px); }
+.landing-hero :is(.landing-side-label, .landing-volume) { display: none; }
+.landing-hero-caption { grid-area: copy; text-align: left; padding: 0 0 24px; }
+.landing-hero-eyebrow { display: inline-block; font-size: 14px; color: var(--yellow); margin-bottom: 18px; }
+.landing-hero-caption > p { font-size: clamp(34px, 3.6vw, 58px); font-weight: 500; letter-spacing: -.055em; line-height: 1.3; max-width: 14em; }
+.landing-hero-description { display: block; margin-top: 20px; font-size: 18px; color: var(--muted); max-width: 39ch; line-height: 1.8; word-break: keep-all; }
+.landing-sound-object { grid-area: object; flex-direction: column; align-self: center; padding: 20px 0; gap: 14px; }
+.landing-sound-thumbnail { width: min(35vw, 480px); height: min(31vw, 420px); overflow: visible; }
+.landing-sound-thumbnail > img { top: -4%; }
+.landing-sound-thumbnail > .paint-splash { opacity: 1; }
+.landing-sound-object > span { font-size: 13px; }
+.landing-sound-object small { font-size: 12px; }
+.landing-hero-bottom { grid-area: actions; min-height: 100px; padding: 20px 0 0; }
+.landing-hero-note { font-size: 14px; }
+.landing-text-link, .landing-skip { font-size: 16px; min-height: 48px; }
+.landing-intro-top, .landing-intro-center > p { font-size: 13px; }
+.landing-story-rail { font-size: 13px; }
+.landing-story-copy { padding-top: 50px; }
+.landing-kicker { font-size: 16px; color: var(--purple); }
+.landing-kicker > span { width: 8px; height: 8px; }
+.landing-story-copy h2 { font-size: clamp(32px, 3.4vw, 56px); line-height: 1.35; }
+.landing-story-copy h2 > em { color: var(--yellow); }
+.landing-story-copy > p:not(.landing-kicker) { font-size: 18px; max-width: 36ch; }
+.landing-story-detail { font-size: 16px; line-height: 1.7; }
+.landing-story-stage { background: var(--panel-purple); padding: 32px; border: 1px solid #a66bff55; }
+.landing-story-stage figcaption { font-size: 13px; }
+.landing-story-discovery .landing-story-stage { background: var(--panel-yellow); border-color: #fff21a55; }
+.landing-taste-preview { background: var(--purple); color: var(--canvas); --muted: #171717; --text: #171717; --border: #17171755; }
+.landing-taste-flower { color: var(--yellow); }
+.landing-preview-eyebrow, .landing-preview-top { font-size: 14px; }
+.landing-preview-tags > span { font-size: 14px; }
+.landing-taste-preview > strong { font-size: 46px; }
+.landing-now-playing :is(strong, span), .landing-friend-note, .landing-album > small { font-size: 14px; }
+.landing-album > strong { font-size: 16px; }
+.landing-record.yellow .landing-record-label { background: var(--yellow); color: var(--canvas); }
+.landing-record.purple .landing-record-label { background: var(--purple); color: var(--canvas); }
+
+@media (max-width: 1150px) {
+  .editorial-edition, .editorial-reel-edition { display: none; }
+  .editorial-reel-copy > strong { font-size: 16px; }
+  .editorial-header-actions { gap: 20px; }
+  .editorial-quick-nav { gap: 18px; }
+  .freshman-shell .home-dashboard { gap: 20px; }
+  .landing-hero { column-gap: 20px; }
+  .landing-sound-thumbnail { height: 340px; }
+  .landing-story-grid { gap: 36px; }
+}
+@media (max-width: 760px) {
+  :root { --editorial-header-height: 76px; --reel-height: 82px; font-size: 16px; }
+  .editorial-quick-nav { display: none; }
+  .editorial-glyph { font-size: 40px; }
+  .editorial-header-actions { gap: 14px; font-size: 15px; }
+  .editorial-header-actions .editorial-start { display: inline-flex; font-size: 15px; gap: 10px; padding: 10px 12px; }
+  .editorial-menu-trigger { font-size: 15px; padding-left: 0; }
+  .is-editorial .editorial-account { display: none; }
+  .editorial-menu-name { font-size: 30px; }
+  .editorial-menu-caption { display: none; }
+  .editorial-menu-top, .editorial-menu-top > button { font-size: 15px; }
+  .editorial-reel-copy > strong { font-size: 15px; }
+  .editorial-reel-copy > span { font-size: 10px; }
+  .editorial-reel-items > a { padding: 12px 4px; }
+  .editorial-reel-note { font-size: 13px; padding: 14px 20px; gap: 15px; }
+  .editorial-reel-note > span { font-size: 18px; }
+  .freshman-shell .application-canvas { padding-top: calc(var(--editorial-header-height) + var(--banner-height, 0px) + 28px); }
+  .freshman-shell .page-greeting h1 { font-size: 36px; }
+  .freshman-shell .page-greeting > p:last-child { font-size: 17px; }
+  .freshman-shell .page-greeting .eyebrow { font-size: 13px; }
+  .freshman-shell .button, .landing-page .landing-action { font-size: 16px; padding: 15px 20px; min-height: 54px; }
+  .freshman-shell .journey-grid { gap: 16px; }
+  .freshman-shell .journey-card { padding: 24px; min-height: 280px; }
+  .freshman-shell .journey-card h2 { font-size: 28px; }
+  .freshman-shell .home-dashboard { grid-template-columns: 1fr; gap: 16px; padding: 0; }
+  .freshman-shell :is(.dashboard-feature, .dashboard-taste) { min-height: 0; padding: 24px; border: 1px solid var(--border); }
+  .freshman-shell .home-shortcuts { grid-template-columns: 1fr; gap: 12px; }
+  .freshman-shell .home-shortcuts > a { padding: 20px; }
+  .freshman-shell .artist-grid { gap: 16px 8px; }
+  .freshman-shell .artist-card { padding: 7px; }
+  .freshman-shell .artist-card > strong { font-size: 16px; overflow-wrap: anywhere; }
+  .freshman-shell .artist-card > span { font-size: 13px; }
+  .freshman-shell .track-row { padding: 16px 8px; gap: 12px; }
+  .freshman-shell .track-info > strong { font-size: 17px; }
+  .freshman-shell .track-info > span { font-size: 15px; }
+  .freshman-shell .selection-footer { flex-wrap: wrap; padding: 16px 0; }
+  .freshman-shell .selection-footer .button { margin-left: auto; }
+  .freshman-shell .privacy-option { padding: 20px; gap: 16px; }
+  .freshman-shell :is(.flow-notice, .request-card, .connection-card, .share-card) { padding: 22px; }
+  .freshman-shell .taste-id { padding: 28px; }
+  .freshman-shell .segmented > :is(button, a) { padding: 12px 18px; font-size: 16px; }
+  .landing-hero { grid-template-columns: 1fr; grid-template-areas: "eyebrow" "brand" "copy" "actions" "object"; gap: 16px; }
+  .landing-hero-topline { font-size: 12px; }
+  .landing-hero-topline > span:last-child { display: none; }
+  .landing-wordmark-stage { padding: 28px 0 8px; justify-content: center; }
+  .landing-wordmark-stage h1 { font-size: clamp(140px, 36vw, 260px); }
+  .landing-hero-caption { padding: 0; }
+  .landing-hero-caption > p { font-size: 36px; }
+  .landing-hero-eyebrow { margin-bottom: 14px; }
+  .landing-hero-description { font-size: 17px; margin-top: 16px; }
+  .landing-hero-bottom { min-height: 0; padding: 20px 0 0; flex-direction: column; align-items: stretch; gap: 16px; }
+  .landing-hero-actions { flex-wrap: wrap; gap: 12px 20px; }
+  .landing-hero-note { font-size: 13px; }
+  .landing-hero-note br { display: none; }
+  .landing-sound-object { padding: 0; }
+  .landing-sound-thumbnail { width: 280px; height: 230px; }
+  .landing-sound-object > span { display: none; }
+  .landing-story-copy h2 { font-size: 34px; }
+  .landing-story-copy > p:not(.landing-kicker) { font-size: 17px; }
+  .landing-story-stage { padding: 22px; }
+  .landing-story-detail { font-size: 15px; }
+  .landing-text-link, .landing-skip { font-size: 15px; }
+}
+@media (max-width: 380px) {
+  .editorial-header-actions { gap: 10px; }
+  .editorial-glyph { font-size: 36px; }
+  .editorial-header-actions .editorial-start { font-size: 14px; padding: 10px; }
+  .editorial-reel-copy > strong { font-size: 14px; }
+  .freshman-shell .track-time { display: none; }
+  .freshman-shell .selection-footer .button { width: 100%; }
+}

@@ -20,11 +20,12 @@ import {
 import { ApiError, type TunitApi } from "./types";
 
 interface LocalUser extends User {
+  email: string;
   salt: string;
   passwordHash: string;
   taste: Taste;
 }
-interface LocalInvitation extends Omit<Invitation, "status"> {}
+interface LocalInvitation extends Omit<Invitation, "status"> { inviterId: string; inviterName: string; inviterConsent: boolean; recipientConsent: boolean; }
 interface Database {
   version: 1;
   users: LocalUser[];
@@ -330,7 +331,13 @@ export function createMockApi(
     },
     async deleteTaste() {
       const db = read();
-      active(db).taste = emptyTaste();
+      const me = active(db), isPublic = me.taste.public;
+      me.taste = { ...emptyTaste(), public: isPublic };
+      write(db);
+    },
+    async updateSettings(settings) {
+      const db = read(), me = active(db);
+      if (settings.isPublic !== undefined) me.taste.public = settings.isPublic;
       write(db);
     },
     async catalog() {
@@ -392,7 +399,7 @@ export function createMockApi(
           (u) => u.id !== me.id && u.taste.public && completeTaste(u.taste),
         )
         .map((u) => compare(me, u, db))
-        .sort((a, b) => b.score - a.score);
+        .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
     },
     async match(id) {
       const db = read(),
@@ -584,6 +591,14 @@ export function createMockApi(
             partner: { id: partner.id, nickname: partner.nickname },
           };
         });
+    },
+    async disconnect(id) {
+      const db = read(), me = active(db);
+      const connection = db.connections.find(c => c.id === id);
+      if (!connection) throw new ApiError(404, "연결을 찾을 수 없습니다.");
+      if (connection.userA !== me.id && connection.userB !== me.id) throw new ApiError(403, "연결 당사자만 해제할 수 있습니다.");
+      db.connections = db.connections.filter(c => c.id !== id);
+      write(db);
     },
   };
 }

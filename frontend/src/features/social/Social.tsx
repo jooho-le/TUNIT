@@ -117,8 +117,8 @@ export function Share() {
               <br />& {resource.data!.user.nickname}
             </h2>
             <strong>
-              {resource.data!.score}
-              <span>%</span>
+              {resource.data!.score ?? "정보 부족"}
+              {resource.data!.score !== null && <span>%</span>}
             </strong>
             <p>
               {resource.data!.commonTracks.length}개의 공통곡 ·{" "}

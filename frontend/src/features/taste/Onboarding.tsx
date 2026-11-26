@@ -5,7 +5,7 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { api } from "../../api";
+import { api, apiMode } from "../../api";
 import { useSession } from "../../app/Session";
 import { useResource } from "../../hooks/useResource";
 import { Heading, Loading, ErrorNotice } from "../../components/Feedback";
@@ -75,6 +75,10 @@ export default function Onboarding() {
     setError(null);
     try {
       await api.saveTaste(taste);
+      if (step === "mood") {
+        try { await api.updateSettings({ isPublic: taste.public }); }
+        catch (error) { throw new Error(`취향 선택은 저장됐지만 공개 설정을 저장하지 못했습니다. 다시 확인해 주세요. ${error instanceof Error ? error.message : ""}`); }
+      }
       await session.refresh();
       go(target);
     } catch (e) {
@@ -243,7 +247,7 @@ export default function Onboarding() {
         description="선택한 정보는 중복 없이 저장됩니다. 언제든 다시 고를 수 있어요."
       />
       {error && <ErrorNotice error={error} />}{" "}
-      {step !== "mood" && (
+      {step !== "mood" && apiMode === "mock" && (
         <label className="search-field">
           <Icon name="search" />
           <input
@@ -364,7 +368,7 @@ export default function Onboarding() {
               <span>1~3개</span>
             </div>
             <div className="choice-chips">
-              {genres.map((g) => (
+              {(catalog.data.genres ?? genres).map((g) => (
                 <button
                   key={g}
                   className={taste.genres.includes(g) ? "selected" : ""}
@@ -389,7 +393,7 @@ export default function Onboarding() {
               <span>1~3개</span>
             </div>
             <div className="choice-chips mood-chips">
-              {moods.map((m) => (
+              {(catalog.data.moods ?? moods).map((m) => (
                 <button
                   key={m}
                   className={taste.moods.includes(m) ? "selected" : ""}

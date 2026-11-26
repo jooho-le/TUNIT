@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../../api";
+import { api, apiMode } from "../../api";
 import { useResource } from "../../hooks/useResource";
 import { Art, Icon } from "../../components/ui";
 import {
@@ -34,7 +34,7 @@ export function Music() {
             나의 다음 곡으로.
           </>
         }
-        description="공개한 사용자의 곡과 직접 등록한 음악을 탐색합니다."
+        description={apiMode === "http" ? "등록된 음악 중 아직 선택하지 않은 곡을 탐색합니다." : "공개한 사용자의 곡과 직접 등록한 음악을 탐색합니다."}
       />
       {featured && (
         <section className="music-feature">
@@ -43,15 +43,15 @@ export function Music() {
             <span className="pill">PICK A FREQUENCY</span>
             <h2>{featured.title}</h2>
             <p>{featured.artist}</p>
-            <a
+            {musicUrl(featured) ? <a
               className="button"
-              href={musicUrl(featured)}
+              href={musicUrl(featured)!}
               target="_blank"
               rel="noopener noreferrer"
             >
               외부 음악 서비스에서 듣기
               <Icon name="external" size={17} />
-            </a>
+            </a> : <p className="sample-note">등록된 외부 듣기 링크가 없습니다.</p>}
           </div>
         </section>
       )}
@@ -97,7 +97,7 @@ export function Music() {
               <input
                 aria-label="외부 음악 검색 주소"
                 readOnly
-                value={musicUrl(featured)}
+                value={musicUrl(featured) ?? "등록된 외부 링크가 없습니다."}
                 onFocus={(e) => e.target.select()}
               />
             </label>

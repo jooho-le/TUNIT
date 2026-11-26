@@ -78,7 +78,7 @@ type View = {
 };
 
 const landing = (key: string, title: string, focus: string): View => ({
-  key, screen: "S01", title, focus, route: "/landing", group: 0, height: 1100, user: null,
+  key, screen: "S01", title, focus, route: "/landing", group: 0, height: focus === "#landing-taste" ? 1400 : 1100, user: null,
 });
 const views: View[] = [
   { ...landing("S01-A", "스플래시 01 · 취향 프로필", ".landing-intro"), motion: true, splashPhase: "taste", height: 1000 },
@@ -151,6 +151,9 @@ const views: View[] = [
     prepare: async (f) => { const req = await f.apis[1].sendInterest(f.ids[0], "음악 취향을 나누고 싶어요."); await f.apis[0].actOnInterest(req.id, "reject"); } },
   { key: "S20", screen: "S20", title: "상호 수락 · 연결 목록", route: "/connections", group: 5, height: 1500,
     prepare: async (f) => { const req = await f.apis[1].sendInterest(f.ids[0], "우리의 공통곡을 더 들어봐요."); await f.apis[0].actOnInterest(req.id, "accept"); } },
+  { key: "S20-B", screen: "S20", title: "친구 연결 해제 · 확인", route: "/connections", group: 5, height: 1600,
+    prepare: async (f) => { const req = await f.apis[1].sendInterest(f.ids[0], "우리의 공통곡을 더 들어봐요."); await f.apis[0].actOnInterest(req.id, "accept"); },
+    action: async (root) => { fireEvent.click(within(root).getByRole("button", { name: "연결 해제" })); } },
   { key: "S17", screen: "S17", title: "팔로우", route: (f) => `/follow/${f.ids[1]}`, group: 6, height: 1150, tier: "P1 · 로컬 UI" },
   { key: "S18", screen: "S18", title: "궁합 카드 공유", route: (f) => `/share/${f.ids[1]}`, group: 6, height: 1750, tier: "P1 · 로컬 UI" },
   ...(["chat", "playlist"] as const).map((kind, i): View => ({
@@ -178,7 +181,7 @@ function splitSelectors(selector: string) {
 }
 
 function exportCss() {
-  const css = ["global", "flows", "editorial", "landing"].map((name) =>
+  const css = ["global", "flows", "editorial", "landing", "readability"].map((name) =>
     readFileSync(`${dir}../src/styles/${name}.css`, "utf8")).join("\n");
   const tree = postcss.parse(css);
   tree.walkAtRules("import", (rule) => { rule.remove(); });

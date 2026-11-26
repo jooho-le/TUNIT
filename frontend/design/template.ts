@@ -52,11 +52,12 @@ export function buildBoard(frames: DesignFrame[], appCss: string, fontCss: strin
     <a href="#atlas-top" data-fit>전체 맞춤</a><button type="button" data-zoom="-">−</button><output id="zoom-label">100%</output><button type="button" data-zoom="+">+</button>
     <button type="button" id="native-size">원본 크기 100%</button>
     <label>흐름 <select id="flow-select"><option value="">선택</option>${groups.map(([title], i) => `<option value="flow-${i + 1}">0${i + 1} ${title}</option>`).join("")}</select></label>
-    <span>화면 더블클릭: 확대 / Esc: 전체</span><button type="button" id="export-html">Figma용 HTML 저장</button>
+    <label>화면 보기 <select id="screen-select"><option value="">전체 화면</option>${frames.map((frame) => `<option value="frame-${frame.key}">${frame.key} ${escape(frame.title)}</option>`).join("")}</select></label>
+    <span>더블클릭: 화면 하나 크게 / Esc: 전체</span><button type="button" id="export-html">Figma용 HTML 저장</button>
   </div>
   <div class="atlas-stage"><main class="atlas-board" id="atlas-top">
     <header class="atlas-cover">
-      <div class="atlas-cover-top"><span>[ TUNIT / PRODUCT DESIGN ARCHIVE ]</span><span>2026.11.10 / DESIGN3 EDITION</span></div>
+      <div class="atlas-cover-top"><span>[ TUNIT / PRODUCT DESIGN ARCHIVE ]</span><span>2026.11.19 / READABILITY UPDATE</span></div>
       <div class="atlas-title-row"><div><h1>Tunit<span>.</span></h1><p>같은 취향에서, 새로운 연결로.</p></div><div class="atlas-count"><strong>${frames.length}</strong><span>STATES<br>27 SCREENS</span></div></div>
       <div class="atlas-cover-bottom"><p>전체 프론트 화면을 흐름별로 펼친 HTML 디자인 보드<br><span>현재 React 프론트에서 추출 · 데스크톱 1440px · 모든 인물과 계정은 디자인 예시</span></p><nav aria-label="보드 목차">${groups.map(([title], i) => `<a href="#flow-${i + 1}">0${i + 1} ${title} ↗</a>`).join("")}</nav></div>
     </header>

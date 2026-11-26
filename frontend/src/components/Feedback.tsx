@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ApiError } from "../api";
 import { Icon } from "./ui";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 export function Heading({
   id,
   label,
@@ -40,6 +41,12 @@ export function ErrorNotice({
   retry?: () => void;
 }) {
   const code = error instanceof ApiError ? error.status : null;
+  useEffect(() => {
+    if (error instanceof ApiError && error.status === 400 && error.fieldErrors[0]) {
+      const field = document.getElementsByName(error.fieldErrors[0].field)[0];
+      if (field instanceof HTMLElement) field.focus();
+    }
+  }, [error]);
   return (
     <section className="flow-notice" role="alert">
       <strong>
@@ -52,6 +59,7 @@ export function ErrorNotice({
               : "잠시 멈췄어요."}
       </strong>
       <p>{error.message}</p>
+      {error instanceof ApiError && error.fieldErrors.length > 0 && <ul>{error.fieldErrors.map((field, index) => <li key={`${field.field}-${index}`}>{field.message}</li>)}</ul>}
       <div className="action-row">
         {retry && (
           <button className="text-link" onClick={retry}>
@@ -59,7 +67,7 @@ export function ErrorNotice({
           </button>
         )}
         {code === 401 ? (
-          <Link className="text-link" to="/login">
+          <Link className="text-link" to={`/login?next=${encodeURIComponent(window.location.hash.slice(1) || "/home")}`}>
             로그인으로
           </Link>
         ) : (

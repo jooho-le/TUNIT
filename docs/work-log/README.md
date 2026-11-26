@@ -10,5 +10,15 @@
 | 2026-11-10 | DESIGN3 기반 랜딩·프론트 편집 디자인 개편                | [디자인 개편](2026-11-10-freshman-redesign.md)   |
 | 2026-11-10 | 로컬 실행·로그인 방법 안내                               | [실행 안내](2026-11-10-local-run-guide.md)       |
 | 2026-11-10 | 전체 27개 화면·45개 상태의 단일 HTML 디자인 보드        | [디자인 보드](2026-11-10-design-atlas.md)        |
+| 2026-11-19 | 글자·색상 대비·한글 메뉴·홈 행동과 보드 개별 보기 개선 | [가독성 개선](2026-11-19-frontend-readability.md) |
+| 2026-11-19 | Notion 3문서 비교·14개 JPA/Flyway·세션/CSRF·실제 PostgreSQL 검사 | [백엔드 기반](2026-11-19-backend-foundation.md) |
+| 2026-11-19 | 백엔드 재검증·로그인 실패 세션/JSON 타입 수정·동일 DB 27개 검사 2회 | [백엔드 재검증](2026-11-19-backend-verification.md) |
+| 2026-11-19 | backend 브랜치에 백엔드 기반·검증·관련 문서 커밋 및 업로드 | [백엔드 Git 정리](2026-11-19-backend-git-publish.md) |
+| 2026-11-19 | 누락 Notion 3문서 대조·가입/취향/설정/태그 API 7개 추가·43개 검사 | [누락 명세 추가 구현](2026-11-19-backend-missing-specs.md) |
+| 2026-11-19 | PR #2 검사 3건 성공·중복 실행·dev 보호 상태·변경 범위 확인 | [PR 검사 확인](2026-11-19-pr-checks-diagnosis.md) |
 | 2026-11-23 | 3초 전체 화면 스플래시·재생/건너뛰기·디자인 보드 갱신·55개 검사 | [앱 시작 스플래시](2026-11-23-app-splash.md) |
 | 2026-11-23 | 취향·음악·연결·로고 4컷 스플래시·반응형 미리보기·56개 검사 | [스플래시 시퀀스](2026-11-23-splash-sequence.md) |
+| 2026-11-27 | Notion 26문서·Spring P0 30개 API·V2·HTTP 어댑터·72/66 검사·46상태 보드 | [Notion P0 구현](2026-11-27-notion-p0-implementation.md) |
+| 2026-11-27 | 승인 정책·실제 P0 결과를 Notion23페이지/요약속성10건에 반영 | [Notion 결과 반영](2026-11-27-notion-approved-decisions-reflection.md) |
+| 2026-11-27 | 3초 스플래시의 frontend 원본 보존·현재 브랜치 미포함 확인 | [스플래시 브랜치 확인](2026-11-27-splash-branch-check.md) |
+| 2026-11-27 | PR #4 문서/디자인 보드 충돌 해결·3초4컷 스플래시와 P0 통합·dev 동기화 | [스플래시 통합·dev 동기화](2026-11-27-splash-conflict-dev-sync.md) |

@@ -1,10 +1,22 @@
 # Review-only reverse-proxy template. Not installed or activated.
 # This listener is loopback-only. Configure JCloud HTTPS termination before publishing.
+# Include this file in the http context (map/log_format are http-level directives).
+map $uri $tunit_log_route {
+    default "static-or-unmatched";
+    ~^/api/v1/invitations/[^/]+/compare$ "/api/v1/invitations/{token}/compare";
+    ~^/api/v1/invitations/[^/]+/complete$ "/api/v1/invitations/{token}/complete";
+    ~^/api/v1/invitations/[^/]+$ "/api/v1/invitations/{token}";
+    ~^/api/ "api";
+}
+log_format tunit_metadata '$request_id $request_method $tunit_log_route $status $request_time';
+# Access logs exclude query strings, raw URI, headers, cookies, body, IP and tokens.
+# Nginx error logs require a separate operational redaction/retention review before exposure.
 server {
     listen 127.0.0.1:8081;
     server_name localhost;
     root /srv/tunit/frontend/dist;
     index index.html;
+    access_log /var/log/nginx/tunit-access.log tunit_metadata;
 
     location / {
         try_files $uri $uri/ /index.html;
