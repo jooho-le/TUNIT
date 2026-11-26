@@ -22,3 +22,4 @@
 | 2026-11-27 | 승인 정책·실제 P0 결과를 Notion23페이지/요약속성10건에 반영 | [Notion 결과 반영](2026-11-27-notion-approved-decisions-reflection.md) |
 | 2026-11-27 | 3초 스플래시의 frontend 원본 보존·현재 브랜치 미포함 확인 | [스플래시 브랜치 확인](2026-11-27-splash-branch-check.md) |
 | 2026-11-27 | PR #4 문서/디자인 보드 충돌 해결·3초4컷 스플래시와 P0 통합·dev 동기화 | [스플래시 통합·dev 동기화](2026-11-27-splash-conflict-dev-sync.md) |
+| 2026-11-27 | Figma용 단일 HTML49상태·현재 코드 재생성 동일성·3개 검사 확인 | [HTML 최신 확인](2026-11-27-figma-html-current-check.md) |
