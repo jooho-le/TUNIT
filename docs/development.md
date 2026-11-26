@@ -39,10 +39,12 @@ npm run dev
 | -------------- | ---------------------------- | --------------------------------- |
 | localStorage   | `tunit-browser-demo-v1`      | 계정·카탈로그·취향·초대·관심·연결 |
 | sessionStorage | `tunit-browser-demo-session` | 탭별 로컬 로그인 상태             |
-| sessionStorage | `tunit-brand-intro-v2`       | 해당 탭의 인트로 완료 표시        |
+| sessionStorage | `tunit-brand-intro-v2`       | 이전 인트로 표시 보존; 현재 스플래시는 사용하지 않음        |
 | localStorage   | `tunit-follow-{userId}`      | P1 계정별 로컬 팔로우             |
 
 기존 `tunit-profile`과 이전 `tunit-brand-intro-v1` 표시는 덮어쓰거나 삭제하지 않는다. 체험용 비밀번호는 PBKDF2 단방향 값으로 보관하지만 브라우저 데이터는 서버 인증 경계가 아니다. 실제 서비스의 비밀번호는 입력하지 않는다.
+
+앱을 열거나 새로고침하면 약3초4컷 스플래시가 재생되며 내부 페이지 이동에는 반복하지 않는다. 기존 세션 저장 표시는 재생 여부에 사용하지 않는다. 건너뛰기/Escape/바로 시작하기와 OS 동작 줄이기를 지원한다.
 
 ## 두 계정으로 흐름 확인
 

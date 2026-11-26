@@ -2,6 +2,21 @@
 
 [문서 안내](README.md) · [화면 지도](screens.md) · [작업 기록](work-log/README.md)
 
+## 스플래시·P0 충돌 해결 재검증 — 2026-11-27
+
+PR [#4](https://github.com/jooho-le/TUNIT/pull/4)의 frontend와 dev를 통합한 후보 코드에서 실행했다. 기존 스플래시4컷/3000ms·앱 시작 연결과 최신 세션/HTTP 어댑터/관심·연결 해제를 함께 유지한다.
+
+| 검사 | 실제 결과 | 범위 |
+| --- | --- | --- |
+| npm test | **71/71 PASS**, 11파일 | 기존66개와 스플래시 경계/정리5개, 앱 시작/깊은 링크/동작 줄이기·기존 API/DOM |
+| npm run build | PASS | TypeScript strict·Vite 프로덕션 빌드 |
+| 디자인 보드 생성 | **3/3 PASS**, **49개 상태** | S01~S27·스플래시4컷·연결 해제 확인·CSS/자산/보기/내보내기 |
+| 디자인 TS | PASS | src/design의 TS·TSX 검사 |
+| OpenAPI 생성 타입 --check | PASS | 현재 API 계약/TS 일치 |
+| dev 대비 backend/contracts/frontend API 파일 대조 | **162개 모두 동일** | 최신 서버·DTO·HTTP 어댑터 보존; 백엔드 테스트는 이번에 재실행하지 않음 |
+
+백엔드72 PASS는 아래 앞선 실제 PostgreSQL 검사 결과를 유지한 것이다. 이번 검증은 서버를 시작하지 않은 DOM/빌드/정적 파일 비교이며 실제 브라우저 모션·Spring HTTP·운영 DB/JCloud·Figma 반입은 미검증이다. 충돌 해결 상세와 Git 승인 범위는 [작업 기록](work-log/2026-11-27-splash-conflict-dev-sync.md)을 따른다.
+
 ## 최신 P0 검증 — 2026-11-27
 
 기준 브랜치 `feature/notion-p0-20261127`, 기준 dev `c69f959`. [Notion 26문서 대조](notion-p0-implementation-review.md)와 사용자 승인 정책을 반영한 결과다. 아래 과거 절의 43개/51개·미구현 설명은 당시 기록이며 현재 결과를 대신하지 않는다.
@@ -159,3 +174,22 @@ Security 검사에서 인증·CSRF·입력 오류 및 프로토콜 오류를 확
 업무 API와 프론트 연결 후 T01~T24를 실제 HTTP·PostgreSQL로 다시 수행하고 화면/API/DB 결과를 함께 기록한다. 로컬 Promise 경합·JSON 저장 실패·mock CSRF 확인을 실제 동시 트랜잭션·롤백·서버 인가 테스트로 대체하지 않는다.
 
 초기 구현 중 해결한 문제와 도구 변경의 이력은 [문서 정리 기록의 이관 메모](work-log/2026-11-10-documentation-cleanup.md#초기-구현-메모-이관)에 보존했다.
+
+## 과거 스플래시 검증 — 2026-11-23
+
+아래는 frontend 브랜치의 당시 결과이며 이번 통합 재검증과 구분한다.
+
+## 마지막 앱 검증
+
+최신 검증일은 2026-11-23(KST), 기준은 3초 스플래시를 취향·음악·연결·로고 4컷으로 개편한 `frontend` 파일이다. React 19·Vite 6.4.5·Vitest 4.1.12·React Testing Library·jsdom에서 테스트·빌드·디자인 보드 생성을 실행했다. 이전 초기 검증은 [25f5410](https://github.com/jooho-le/TUNIT/commit/25f54107bea95fbcc09d2183afc880d94601afab)에 보존한다.
+
+| 검사                       | 기록된 결과              | 범위                                                          |
+| -------------------------- | ------------------------ | ------------------------------------------------------------- |
+| `npm test`                 | **56/56 통과**, 7개 파일 | 기존 흐름·4컷 순서/시간 경계·3초 타이머·건너뛰기·깊은 링크·저장값 보존·접근성 |
+| `npm run build`            | **통과**                 | TypeScript strict·Vite production build                       |
+| 디자인 보드 생성           | **1/1 통과**            | 48개 프레임·스플래시 컷별 단일 장면·CSS·자산 포함 검사 |
+| 내보내기 TypeScript        | **통과**                | 앱 src·내보내기 검사·보드 템플릿을 포함한 임시 tsconfig의 strict 검사 |
+| Chrome 스플래시 외형       | **확인**                | 로컬 정지 HTML의 네 컷, 1440×1000·390×844 배치; 실제 기기/브라우저 모션 실측 아님 |
+| 의존성 설치 당시 npm audit | **발견 0건**             | Vitest 4.1.12로 조정한 당시 lockfile 검사; 실시간 재검사 아님 |
+
+최신 변경과 한계는 [4컷 스플래시 작업 기록](work-log/2026-11-23-splash-sequence.md)에 있다. 이전 [스플래시 추가](work-log/2026-11-23-app-splash.md)·[DESIGN3 개편](work-log/2026-11-10-freshman-redesign.md)·[문서 정리](work-log/2026-11-10-documentation-cleanup.md)는 각각의 기록에 보존한다.

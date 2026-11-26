@@ -1,60 +1,67 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Icon } from "../../components/ui";
-import { INTRO_DURATION } from "./content";
+import { INTRO_DURATION, SPLASH_SHOTS, type SplashShot } from "./content";
+import SplashScenes from "./SplashScenes";
 
 export default function IntroSequence({
   onComplete,
 }: {
-  onComplete: (restoreFocus?: boolean) => void;
+  onComplete: () => void;
 }) {
-  const controls = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
+  const [shot, setShot] = useState<SplashShot>("taste");
   useEffect(() => {
-    const finish = () =>
-      onComplete(!!controls.current?.contains(document.activeElement));
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    root.current?.focus({ preventScroll: true });
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reduce = () => {
-      if (preference.matches) finish();
+      if (preference.matches) onComplete();
     };
-    const timer = window.setTimeout(finish, INTRO_DURATION);
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onComplete();
+    };
+    const timer = window.setTimeout(onComplete, INTRO_DURATION);
+    const cuts = SPLASH_SHOTS.slice(1).map((next) =>
+      window.setTimeout(() => setShot(next.id), INTRO_DURATION * next.at),
+    );
     preference.addEventListener("change", reduce);
+    window.addEventListener("keydown", escape);
+    reduce();
     return () => {
       window.clearTimeout(timer);
+      cuts.forEach((cut) => window.clearTimeout(cut));
       preference.removeEventListener("change", reduce);
+      window.removeEventListener("keydown", escape);
+      document.body.style.overflow = previousOverflow;
     };
   }, [onComplete]);
   return (
     <section
-      className="landing-intro"
+      ref={root}
+      tabIndex={-1}
+      className="landing-intro app-splash"
       data-screen="S01-A"
-      aria-label="TUNIT 브랜드 인트로"
+      data-phase={shot}
+      aria-label="TUNIT 스플래시"
       style={{ "--intro-duration": `${INTRO_DURATION}ms` } as CSSProperties}
     >
-      <div className="landing-intro-top">
-        <span>[ A TUNIT ORIGINAL ]</span>
-        <span>2026 / VOL. 01</span>
-      </div>
-      <div className="landing-intro-center">
-        <p>EVERY CONNECTION STARTS WITH A SOUND.</p>
-        <h1 aria-label="TUNIT 브랜드 인트로">
-          {"Tunit.".split("").map((letter, i) => (
-            <span key={i} style={{ animationDelay: `${i * 65}ms` }}>
-              {letter}
-            </span>
-          ))}
-        </h1>
-        <span className="editorial-handwriting">
-          [ 우리를 이어주는, 아주 작은 취향 ]
-        </span>
-      </div>
-      <div ref={controls} className="landing-intro-controls">
-        <Link className="landing-action" to="/start">
-          내 취향 찾기 <Icon name="arrow" size={20} />
-        </Link>
-        <button className="landing-skip" onClick={() => onComplete(true)}>
-          인트로 건너뛰기 <Icon name="arrow" size={16} />
+      <div className="splash-topline">
+        <span>TUNIT <small>MUSIC CONNECTS US.</small></span>
+        <button className="splash-skip" onClick={onComplete}>
+          스플래시 건너뛰기 <Icon name="arrow" size={18} />
         </button>
       </div>
+      <h1 className="splash-accessible-title">TUNIT 스플래시</h1>
+      <SplashScenes active={shot} />
+      <div className="splash-bottom">
+        <span>SAME SOUND.<br />NEW CONNECTION.</span>
+        <Link className="splash-start" to="/start" onClick={onComplete}>
+          내 취향 찾기 <Icon name="arrow" size={20} />
+        </Link>
+      </div>
+      <div className="splash-track" aria-hidden="true"><span /></div>
     </section>
   );
 }

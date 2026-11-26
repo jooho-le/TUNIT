@@ -9,6 +9,7 @@ import { createMockApi } from "../src/api/mock";
 import { MemoryStorage, validTaste } from "../src/test/helpers";
 import { catalogArtists, catalogTracks } from "../src/features/catalog";
 import App from "../src/app/App";
+import type { SplashShot } from "../src/features/landing/content";
 import { buildBoard, type DesignFrame } from "./template";
 
 // Only this export job sees synthetic accounts. Production APIs and storage stay untouched.
@@ -70,6 +71,7 @@ type View = {
   expected?: string;
   focus?: string;
   motion?: boolean;
+  splashPhase?: SplashShot;
   offline?: boolean;
   prepare?: (f: Fixture) => Promise<string | void>;
   action?: (root: HTMLElement) => void | Promise<void>;
@@ -79,7 +81,10 @@ const landing = (key: string, title: string, focus: string): View => ({
   key, screen: "S01", title, focus, route: "/landing", group: 0, height: focus === "#landing-taste" ? 1400 : 1100, user: null,
 });
 const views: View[] = [
-  { ...landing("S01-A", "브랜드 인트로", ".landing-intro"), motion: true, height: 1000 },
+  { ...landing("S01-A", "스플래시 01 · 취향 프로필", ".landing-intro"), motion: true, splashPhase: "taste", height: 1000 },
+  { ...landing("S01-A2", "스플래시 02 · 음악 탐색", ".landing-intro"), motion: true, splashPhase: "music", height: 1000 },
+  { ...landing("S01-A3", "스플래시 03 · 새로운 연결", ".landing-intro"), motion: true, splashPhase: "people", height: 1000 },
+  { ...landing("S01-A4", "스플래시 04 · Tunit.", ".landing-intro"), motion: true, splashPhase: "brand", height: 1000 },
   landing("S01-B", "랜딩 · 메인 타이틀", ".landing-hero"),
   landing("S01-C1", "랜딩 · 취향을 기록하다", "#landing-taste"),
   landing("S01-C2", "랜딩 · 같은 취향의 사람", "#landing-twin"),
@@ -270,6 +275,17 @@ test("export actual frontend screens as one static, self-contained design atlas"
     if (view.offline) await waitFor(() => expect(container.textContent).toContain(view.expected), { timeout: 2500 });
     if (view.action) await act(async () => { await view.action!(container); });
     const clone = container.cloneNode(true) as HTMLElement;
+    // Freeze one real splash cut per frame; no production debug controls are added.
+    if (view.splashPhase) {
+      const splash = clone.querySelector<HTMLElement>(".app-splash")!;
+      splash.dataset.phase = view.splashPhase;
+      splash.querySelectorAll<HTMLElement>("[data-splash-scene]").forEach((scene) => {
+        if (scene.dataset.splashScene === view.splashPhase) scene.removeAttribute("hidden");
+        else scene.remove();
+      });
+      expect(splash.querySelectorAll("[data-splash-scene]")).toHaveLength(1);
+      expect(splash.querySelector("[data-splash-scene]")).toHaveAttribute("data-splash-scene", view.splashPhase);
+    }
     if (view.focus) {
       const selected = clone.querySelector(view.focus);
       expect(selected, view.key).not.toBeNull();
